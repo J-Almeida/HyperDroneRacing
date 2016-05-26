@@ -32,6 +32,120 @@ ModelImporter:
     100048: pilares
     100050: rio
     100052: rio_barragem
+    100054: coluna9.001
+    100056: coluna9.002
+    100058: coluna9.003
+    100060: coluna9.004
+    100062: coluna9.005
+    100064: coluna9.006
+    100066: coluna9.007
+    100068: coluna9.008
+    100070: coluna9.009
+    100072: coluna9.010
+    100074: coluna9.011
+    100076: coluna9.012
+    100078: coluna9.013
+    100080: coluna9.014
+    100082: coluna9.015
+    100084: coluna9.016
+    100086: coluna9.017
+    100088: coluna9.018
+    100090: coluna9.019
+    100092: coluna9.020
+    100094: coluna9.021
+    100096: coluna9.022
+    100098: coluna9.023
+    100100: coluna9.024
+    100102: coluna9.025
+    100104: coluna9.026
+    100106: coluna9.027
+    100108: coluna9.028
+    100110: coluna9.029
+    100112: coluna9.030
+    100114: coluna9.031
+    100116: coluna9.032
+    100118: coluna9.033
+    100120: coluna9.034
+    100122: coluna9.035
+    100124: coluna9.036
+    100126: coluna9.037
+    100128: coluna9.038
+    100130: coluna9.039
+    100132: coluna9.040
+    100134: coluna9.041
+    100136: coluna9.042
+    100138: coluna9.043
+    100140: coluna9.044
+    100142: coluna9.047
+    100144: coluna9.058
+    100146: coluna9.059
+    100148: coluna9.060
+    100150: coluna9.061
+    100152: coluna9.062
+    100154: coluna9.063
+    100156: coluna9.064
+    100158: coluna9.065
+    100160: coluna9.066
+    100162: coluna9.067
+    100164: coluna9.068
+    100166: coluna9.070
+    100168: cristal01.001
+    100170: cristal01.002
+    100172: cristal01.003
+    100174: cristal01.004
+    100176: cristal01.005
+    100178: cristal01.006
+    100180: cristal01.007
+    100182: cristal01.008
+    100184: cristal02.001
+    100186: cristal02.002
+    100188: cristal02.003
+    100190: cristal02.004
+    100192: cristal02.005
+    100194: cristal02.006
+    100196: cristal02.007
+    100198: cristal02.008
+    100200: cristal02.009
+    100202: cristal02.010
+    100204: cristal02.011
+    100206: cristal02.012
+    100208: cristal02.013
+    100210: 'luz checkpoint 1 '
+    100212: luz checkpoint 1 .001
+    100214: luz checkpoint 1 .002
+    100216: luz checkpoint 2
+    100218: luz checkpoint 2.001
+    100220: luz checkpoint 2.002
+    100222: luz checkpoint 3
+    100224: luz checkpoint 3.001
+    100226: luz checkpoint 3.002
+    100228: luz cristal
+    100230: luz cristal.001
+    100232: luz cristal.002
+    100234: luz cristal.003
+    100236: luz cristal.004
+    100238: luz cristal.005
+    100240: luz cristal.006
+    100242: luz cristal.007
+    100244: luz cristal.008
+    100246: luz cristal.009
+    100248: luz cristal.010
+    100250: luz cristal.011
+    100252: luz cristal.012
+    100254: luz cristal.013
+    100256: luz cristal.014
+    100258: luz cristal.015
+    100260: luz cristal.016
+    100262: luz cristal.017
+    100264: luz cristal.018
+    100266: luz cristal.019
+    100268: luz cristal.020
+    100270: obstaculo01
+    100272: obstaculo02
+    100274: obstaculo03
+    100276: obstaculo04
+    100278: obstaculo05
+    100280: tunel
     400000: 01p
     400002: 02p
     400004: 03p
@@ -59,6 +173,120 @@ ModelImporter:
     400048: pilares
     400050: rio
     400052: rio_barragem
+    400054: coluna9.001
+    400056: coluna9.002
+    400058: coluna9.003
+    400060: coluna9.004
+    400062: coluna9.005
+    400064: coluna9.006
+    400066: coluna9.007
+    400068: coluna9.008
+    400070: coluna9.009
+    400072: coluna9.010
+    400074: coluna9.011
+    400076: coluna9.012
+    400078: coluna9.013
+    400080: coluna9.014
+    400082: coluna9.015
+    400084: coluna9.016
+    400086: coluna9.017
+    400088: coluna9.018
+    400090: coluna9.019
+    400092: coluna9.020
+    400094: coluna9.021
+    400096: coluna9.022
+    400098: coluna9.023
+    400100: coluna9.024
+    400102: coluna9.025
+    400104: coluna9.026
+    400106: coluna9.027
+    400108: coluna9.028
+    400110: coluna9.029
+    400112: coluna9.030
+    400114: coluna9.031
+    400116: coluna9.032
+    400118: coluna9.033
+    400120: coluna9.034
+    400122: coluna9.035
+    400124: coluna9.036
+    400126: coluna9.037
+    400128: coluna9.038
+    400130: coluna9.039
+    400132: coluna9.040
+    400134: coluna9.041
+    400136: coluna9.042
+    400138: coluna9.043
+    400140: coluna9.044
+    400142: coluna9.047
+    400144: coluna9.058
+    400146: coluna9.059
+    400148: coluna9.060
+    400150: coluna9.061
+    400152: coluna9.062
+    400154: coluna9.063
+    400156: coluna9.064
+    400158: coluna9.065
+    400160: coluna9.066
+    400162: coluna9.067
+    400164: coluna9.068
+    400166: coluna9.070
+    400168: cristal01.001
+    400170: cristal01.002
+    400172: cristal01.003
+    400174: cristal01.004
+    400176: cristal01.005
+    400178: cristal01.006
+    400180: cristal01.007
+    400182: cristal01.008
+    400184: cristal02.001
+    400186: cristal02.002
+    400188: cristal02.003
+    400190: cristal02.004
+    400192: cristal02.005
+    400194: cristal02.006
+    400196: cristal02.007
+    400198: cristal02.008
+    400200: cristal02.009
+    400202: cristal02.010
+    400204: cristal02.011
+    400206: cristal02.012
+    400208: cristal02.013
+    400210: 'luz checkpoint 1 '
+    400212: luz checkpoint 1 .001
+    400214: luz checkpoint 1 .002
+    400216: luz checkpoint 2
+    400218: luz checkpoint 2.001
+    400220: luz checkpoint 2.002
+    400222: luz checkpoint 3
+    400224: luz checkpoint 3.001
+    400226: luz checkpoint 3.002
+    400228: luz cristal
+    400230: luz cristal.001
+    400232: luz cristal.002
+    400234: luz cristal.003
+    400236: luz cristal.004
+    400238: luz cristal.005
+    400240: luz cristal.006
+    400242: luz cristal.007
+    400244: luz cristal.008
+    400246: luz cristal.009
+    400248: luz cristal.010
+    400250: luz cristal.011
+    400252: luz cristal.012
+    400254: luz cristal.013
+    400256: luz cristal.014
+    400258: luz cristal.015
+    400260: luz cristal.016
+    400262: luz cristal.017
+    400264: luz cristal.018
+    400266: luz cristal.019
+    400268: luz cristal.020
+    400270: obstaculo01
+    400272: obstaculo02
+    400274: obstaculo03
+    400276: obstaculo04
+    400278: obstaculo05
+    400280: tunel
     2300000: 01p
     2300002: 02p
     2300004: 03p
@@ -82,6 +310,90 @@ ModelImporter:
     2300040: pilares
     2300042: rio
     2300044: rio_barragem
+    2300046: coluna9.001
+    2300048: coluna9.002
+    2300050: coluna9.003
+    2300052: coluna9.004
+    2300054: coluna9.005
+    2300056: coluna9.006
+    2300058: coluna9.007
+    2300060: coluna9.008
+    2300062: coluna9.009
+    2300064: coluna9.010
+    2300066: coluna9.011
+    2300068: coluna9.012
+    2300070: coluna9.013
+    2300072: coluna9.014
+    2300074: coluna9.015
+    2300076: coluna9.016
+    2300078: coluna9.017
+    2300080: coluna9.018
+    2300082: coluna9.019
+    2300084: coluna9.020
+    2300086: coluna9.021
+    2300088: coluna9.022
+    2300090: coluna9.023
+    2300092: coluna9.024
+    2300094: coluna9.025
+    2300096: coluna9.026
+    2300098: coluna9.027
+    2300100: coluna9.028
+    2300102: coluna9.029
+    2300104: coluna9.030
+    2300106: coluna9.031
+    2300108: coluna9.032
+    2300110: coluna9.033
+    2300112: coluna9.034
+    2300114: coluna9.035
+    2300116: coluna9.036
+    2300118: coluna9.037
+    2300120: coluna9.038
+    2300122: coluna9.039
+    2300124: coluna9.040
+    2300126: coluna9.041
+    2300128: coluna9.042
+    2300130: coluna9.043
+    2300132: coluna9.044
+    2300134: coluna9.047
+    2300136: coluna9.058
+    2300138: coluna9.059
+    2300140: coluna9.060
+    2300142: coluna9.061
+    2300144: coluna9.062
+    2300146: coluna9.063
+    2300148: coluna9.064
+    2300150: coluna9.065
+    2300152: coluna9.066
+    2300154: coluna9.067
+    2300156: coluna9.068
+    2300158: coluna9.070
+    2300160: cristal01.001
+    2300162: cristal01.002
+    2300164: cristal01.003
+    2300166: cristal01.004
+    2300168: cristal01.005
+    2300170: cristal01.006
+    2300172: cristal01.007
+    2300174: cristal01.008
+    2300176: cristal02.001
+    2300178: cristal02.002
+    2300180: cristal02.003
+    2300182: cristal02.004
+    2300184: cristal02.005
+    2300186: cristal02.006
+    2300188: cristal02.007
+    2300190: cristal02.008
+    2300192: cristal02.009
+    2300194: cristal02.010
+    2300196: cristal02.011
+    2300198: cristal02.012
+    2300200: cristal02.013
+    2300202: obstaculo01
+    2300204: obstaculo02
+    2300206: obstaculo03
+    2300208: obstaculo04
+    2300210: obstaculo05
+    2300212: tunel
     3300000: 01p
     3300002: 02p
     3300004: 03p
@@ -105,6 +417,90 @@ ModelImporter:
     3300040: pilares
     3300042: rio
     3300044: rio_barragem
+    3300046: coluna9.001
+    3300048: coluna9.002
+    3300050: coluna9.003
+    3300052: coluna9.004
+    3300054: coluna9.005
+    3300056: coluna9.006
+    3300058: coluna9.007
+    3300060: coluna9.008
+    3300062: coluna9.009
+    3300064: coluna9.010
+    3300066: coluna9.011
+    3300068: coluna9.012
+    3300070: coluna9.013
+    3300072: coluna9.014
+    3300074: coluna9.015
+    3300076: coluna9.016
+    3300078: coluna9.017
+    3300080: coluna9.018
+    3300082: coluna9.019
+    3300084: coluna9.020
+    3300086: coluna9.021
+    3300088: coluna9.022
+    3300090: coluna9.023
+    3300092: coluna9.024
+    3300094: coluna9.025
+    3300096: coluna9.026
+    3300098: coluna9.027
+    3300100: coluna9.028
+    3300102: coluna9.029
+    3300104: coluna9.030
+    3300106: coluna9.031
+    3300108: coluna9.032
+    3300110: coluna9.033
+    3300112: coluna9.034
+    3300114: coluna9.035
+    3300116: coluna9.036
+    3300118: coluna9.037
+    3300120: coluna9.038
+    3300122: coluna9.039
+    3300124: coluna9.040
+    3300126: coluna9.041
+    3300128: coluna9.042
+    3300130: coluna9.043
+    3300132: coluna9.044
+    3300134: coluna9.047
+    3300136: coluna9.058
+    3300138: coluna9.059
+    3300140: coluna9.060
+    3300142: coluna9.061
+    3300144: coluna9.062
+    3300146: coluna9.063
+    3300148: coluna9.064
+    3300150: coluna9.065
+    3300152: coluna9.066
+    3300154: coluna9.067
+    3300156: coluna9.068
+    3300158: coluna9.070
+    3300160: cristal01.001
+    3300162: cristal01.002
+    3300164: cristal01.003
+    3300166: cristal01.004
+    3300168: cristal01.005
+    3300170: cristal01.006
+    3300172: cristal01.007
+    3300174: cristal01.008
+    3300176: cristal02.001
+    3300178: cristal02.002
+    3300180: cristal02.003
+    3300182: cristal02.004
+    3300184: cristal02.005
+    3300186: cristal02.006
+    3300188: cristal02.007
+    3300190: cristal02.008
+    3300192: cristal02.009
+    3300194: cristal02.010
+    3300196: cristal02.011
+    3300198: cristal02.012
+    3300200: cristal02.013
+    3300202: obstaculo01
+    3300204: obstaculo02
+    3300206: obstaculo03
+    3300208: obstaculo04
+    3300210: obstaculo05
+    3300212: tunel
     4300000: Cube.007
     4300002: chao
     4300004: rio
@@ -128,6 +524,90 @@ ModelImporter:
     4300040: 11p
     4300042: 12p
     4300044: 13p
+    4300046: cristal01.001
+    4300048: coluna9.070
+    4300050: coluna9.068
+    4300052: coluna9.067
+    4300054: coluna9.066
+    4300056: coluna9.065
+    4300058: coluna9.064
+    4300060: coluna9.063
+    4300062: coluna9.062
+    4300064: coluna9.061
+    4300066: coluna9.060
+    4300068: coluna9.059
+    4300070: coluna9.058
+    4300072: coluna9.047
+    4300074: coluna9.044
+    4300076: coluna9.023
+    4300078: coluna9.020
+    4300080: coluna9.043
+    4300082: coluna9.042
+    4300084: coluna9.041
+    4300086: coluna9.040
+    4300088: coluna9.039
+    4300090: coluna9.038
+    4300092: coluna9.037
+    4300094: coluna9.036
+    4300096: coluna9.035
+    4300098: coluna9.034
+    4300100: coluna9.033
+    4300102: coluna9.032
+    4300104: coluna9.031
+    4300106: coluna9.030
+    4300108: coluna9.025
+    4300110: coluna9.018
+    4300112: coluna9.029
+    4300114: coluna9.028
+    4300116: coluna9.027
+    4300118: coluna9.026
+    4300120: coluna9.024
+    4300122: coluna9.022
+    4300124: coluna9.021
+    4300126: coluna9.019
+    4300128: coluna9.013
+    4300130: coluna9.009
+    4300132: coluna9.017
+    4300134: coluna9.015
+    4300136: coluna9.014
+    4300138: coluna9.010
+    4300140: tunel
+    4300142: obstaculo01
+    4300144: obstaculo02
+    4300146: obstaculo03
+    4300148: obstaculo04
+    4300150: obstaculo05
+    4300152: cristal02.001
+    4300154: cristal02.002
+    4300156: cristal02.003
+    4300158: cristal02.004
+    4300160: coluna9.001
+    4300162: coluna9.002
+    4300164: coluna9.003
+    4300166: coluna9.004
+    4300168: coluna9.005
+    4300170: coluna9.006
+    4300172: coluna9.007
+    4300174: coluna9.008
+    4300176: coluna9.011
+    4300178: coluna9.012
+    4300180: coluna9.016
+    4300182: cristal01.002
+    4300184: cristal02.005
+    4300186: cristal01.003
+    4300188: cristal02.006
+    4300190: cristal02.007
+    4300192: cristal01.004
+    4300194: cristal02.008
+    4300196: cristal02.009
+    4300198: cristal01.005
+    4300200: cristal01.006
+    4300202: cristal01.007
+    4300204: cristal01.008
+    4300206: cristal02.010
+    4300208: cristal02.011
+    4300210: cristal02.012
+    4300212: cristal02.013
   materials:
     importMaterials: 1
     materialName: 0

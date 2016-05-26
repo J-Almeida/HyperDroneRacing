@@ -90,7 +90,7 @@ public class InputMovement : MonoBehaviour {
         //this.gameObject.transform.Translate(new Vector3(0, verticalSpeed * Time.deltaTime, 0));
         this.gameObject.GetComponent<Rigidbody>().velocity += new Vector3(0, verticalSpeed, 0);
 
-        //make camera's rotation independent of drone
+        //make camera's tilt independent of drone
         camera.transform.eulerAngles = new Vector3(17, this.gameObject.transform.eulerAngles.y, 0);
         //make camera's position relative to drone
         Vector3 offset = new Vector3(0f, 0.95f, -1.85f);
