@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class CourseBehaviour : MonoBehaviour {
 
+    public int numberOfLaps = 1;
     public List<GameObject> checkpoints;
 
 	// Use this for initialization

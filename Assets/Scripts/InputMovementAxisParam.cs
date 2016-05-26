@@ -1,21 +1,26 @@
 using UnityEngine;
 using System.Collections;
 
-public class InputMovement : MonoBehaviour {
+public class InputMovementAxisParam : MonoBehaviour {
 
     [Tooltip("Camera to follow the drone. This field is mandatory for proper functioning.")]
     public Camera camera;
     [Tooltip("Scale for movement speed.")]
-    public float movementScale = 10;
+    public float movementScale;
     [Tooltip("Tilt angle for full speed vertical flight.")]
-    public float verticalAngle = 40;
+    public float verticalAngle;
     [Tooltip("Tilt angle for full speed horizontal flight.")]
-    public float horizontalAngle = 40;
+    public float horizontalAngle;
 
-    private float verticalSpeed = 0f;
+    private float verticalSpeed ;
     [Tooltip("Vertical flight top speed.")]
-    public float verticalTopSpeed = 10f;
+    public float verticalTopSpeed;
 
+    public string verticalAxis;
+    public string horizontalAxis;
+    public string horizontalLeftAxis;
+    public string verticalLeftAxis;
+    
     // Use this for initialization
     void Start () {
 	
@@ -25,34 +30,36 @@ public class InputMovement : MonoBehaviour {
     void Update() {
         Vector3 frontVector = new Vector3(camera.transform.forward.x, 0, camera.transform.forward.z);
         Vector3 upVector = new Vector3(0, -camera.transform.forward.y, 0);
-        
+        print(Input.GetAxis(verticalLeftAxis));
+        print(Input.GetAxis(horizontalLeftAxis));
+
         float targetVerticalAngle = 0f;
         float targetHorizontalAngle = 0f;
 
-        if (Input.GetAxis("Vertical (mimas-control)") > 0) {
+        if (Input.GetAxis(verticalAxis) > 0) {
             targetVerticalAngle = -40;
-        } if (Input.GetAxis("Vertical (mimas-control)") < 0) {
+        } if (Input.GetAxis(verticalAxis) < 0) {
             targetVerticalAngle = 40;
-        } if (Input.GetAxis("Horizontal (mimas-control)") > 0) {
+        } if (Input.GetAxis(horizontalAxis) > 0) {
             targetHorizontalAngle = -40;
-        } if (Input.GetAxis("Horizontal (mimas-control)") < 0) {
+        } if (Input.GetAxis(horizontalAxis) < 0) {
             targetHorizontalAngle = 40;
         }
 
-        if (Input.GetAxis("VerticalLeft (mimas-control)") == 0) {
+        if (Input.GetAxis(verticalAxis) == 0) {
             //this.gameObject.transform.rotation = Quaternion.AngleAxis(0, Vector3.right);
         }
 
-        if (Input.GetAxis("VerticalLeft (mimas-control)") > 0.5f) {
+        if (Input.GetAxis(verticalLeftAxis) > 0.5f) {
             verticalSpeed += (verticalTopSpeed - verticalSpeed) / 10f;
-        } else if (Input.GetAxis("VerticalLeft (mimas-control)") < -0.5f) {
+        } else if (Input.GetAxis(verticalLeftAxis) < -0.5f) {
             verticalSpeed -= (verticalTopSpeed - Mathf.Abs(verticalSpeed)) / 10f;
         } else
             verticalSpeed += (0 - verticalSpeed) / 10f;
 
-        if (Input.GetAxis("HorizontalLeft (mimas-control)") > 0)
+        if (Input.GetAxis(horizontalLeftAxis) > 0)
             this.gameObject.transform.Rotate(0, 1, 0);
-        if (Input.GetAxis("HorizontalLeft (mimas-control)") < 0)
+        if (Input.GetAxis(horizontalLeftAxis) < 0)
             this.gameObject.transform.Rotate(0, -1, 0);
 
         //final adjustments
