@@ -1,0 +1,194 @@
+fileFormatVersion: 2
+guid: a02a24f8f9ff6a9428d91d1f7abff9cd
+timeCreated: 1464257162
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 01p
+    100002: 02p
+    100004: 03p
+    100006: 04p
+    100008: 05p
+    100010: 06p
+    100012: 07p
+    100014: 08p
+    100016: 09p
+    100018: 10p
+    100020: 11p
+    100022: 12p
+    100024: 13p
+    100026: barragem
+    100028: Camera
+    100030: chao
+    100032: coluna9
+    100034: Cube.006
+    100036: Cube.007
+    100038: cupula
+    100040: //RootNode
+    100042: Hemi
+    100044: Hemi.001
+    100046: hexagono_pir
+    100048: pilares
+    100050: rio
+    100052: rio_barragem
+    400000: 01p
+    400002: 02p
+    400004: 03p
+    400006: 04p
+    400008: 05p
+    400010: 06p
+    400012: 07p
+    400014: 08p
+    400016: 09p
+    400018: 10p
+    400020: 11p
+    400022: 12p
+    400024: 13p
+    400026: barragem
+    400028: Camera
+    400030: chao
+    400032: coluna9
+    400034: Cube.006
+    400036: Cube.007
+    400038: cupula
+    400040: //RootNode
+    400042: Hemi
+    400044: Hemi.001
+    400046: hexagono_pir
+    400048: pilares
+    400050: rio
+    400052: rio_barragem
+    2300000: 01p
+    2300002: 02p
+    2300004: 03p
+    2300006: 04p
+    2300008: 05p
+    2300010: 06p
+    2300012: 07p
+    2300014: 08p
+    2300016: 09p
+    2300018: 10p
+    2300020: 11p
+    2300022: 12p
+    2300024: 13p
+    2300026: barragem
+    2300028: chao
+    2300030: coluna9
+    2300032: Cube.006
+    2300034: Cube.007
+    2300036: cupula
+    2300038: hexagono_pir
+    2300040: pilares
+    2300042: rio
+    2300044: rio_barragem
+    3300000: 01p
+    3300002: 02p
+    3300004: 03p
+    3300006: 04p
+    3300008: 05p
+    3300010: 06p
+    3300012: 07p
+    3300014: 08p
+    3300016: 09p
+    3300018: 10p
+    3300020: 11p
+    3300022: 12p
+    3300024: 13p
+    3300026: barragem
+    3300028: chao
+    3300030: coluna9
+    3300032: Cube.006
+    3300034: Cube.007
+    3300036: cupula
+    3300038: hexagono_pir
+    3300040: pilares
+    3300042: rio
+    3300044: rio_barragem
+    4300000: Cube.007
+    4300002: chao
+    4300004: rio
+    4300006: rio_barragem
+    4300008: hexagono_pir
+    4300010: cupula
+    4300012: barragem
+    4300014: 01p
+    4300016: coluna9
+    4300018: pilares
+    4300020: Cube.006
+    4300022: 02p
+    4300024: 03p
+    4300026: 04p
+    4300028: 05p
+    4300030: 06p
+    4300032: 07p
+    4300034: 08p
+    4300036: 09p
+    4300038: 10p
+    4300040: 11p
+    4300042: 12p
+    4300044: 13p
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
