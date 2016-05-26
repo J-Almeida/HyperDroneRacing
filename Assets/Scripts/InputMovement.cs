@@ -18,7 +18,8 @@ public class InputMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-	
+        foreach(var controller in Input.GetJoystickNames())
+            Debug.Log(controller);
 	}
 
     // Update is called once per frame
