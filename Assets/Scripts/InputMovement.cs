@@ -39,7 +39,7 @@ public class InputMovement : MonoBehaviour {
             targetHorizontalAngle = 40;
         }
 
-        if (Input.GetAxis("Vertical (mimas-control)") == 0) {
+        if (Input.GetAxis("VerticalLeft (mimas-control)") == 0) {
             //this.gameObject.transform.rotation = Quaternion.AngleAxis(0, Vector3.right);
         }
 
