@@ -70,21 +70,6 @@ public class csHellicopter : MonoBehaviour {
             // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f);
             UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.015f);
 
-            
-            // uma função keyvalue diferente que entra em accção imediatamente depois de largar as teclas?
-
-            if ( (Input.GetKey(UpKey) || Input.GetKey(DownKey)) == false ) {
-                // this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-                if (this.gameObject.GetComponent<Rigidbody>().velocity.y > 0)
-
-                        else
-
-
-            }
-            else
-            { 
-                // this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            }
     
 
         InvokeRepeating("updateDebugText", 0.0f, 0.5f);
