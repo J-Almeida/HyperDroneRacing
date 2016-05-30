@@ -30,30 +30,30 @@ public class InputMovement : MonoBehaviour {
         float targetVerticalAngle = 0f;
         float targetHorizontalAngle = 0f;
 
-        if (Input.GetAxis("RightVertical (ps3)") > 0) {
+        if (Input.GetAxis("RightVertical (ps3/360)") > 0 || Input.GetKey("down")) {
             targetVerticalAngle = -40;
-        } if (Input.GetAxis("RightVertical (ps3)") < 0) {
+        } if (Input.GetAxis("RightVertical (ps3/360)") < 0 || Input.GetKey("up")) {
             targetVerticalAngle = 40;
-        } if (Input.GetAxis("RightHorizontal (ps3)") > 0) {
+        } if (Input.GetAxis("RightHorizontal (ps3/360)") > 0 || Input.GetKey("right")) {
             targetHorizontalAngle = -40;
-        } if (Input.GetAxis("RightHorizontal (ps3)") < 0) {
+        } if (Input.GetAxis("RightHorizontal (ps3/360)") < 0 || Input.GetKey("left")) {
             targetHorizontalAngle = 40;
         }
 
-        if (Input.GetAxis("LeftVertical (ps3)") == 0) {
+        if (Input.GetAxis("LeftVertical (ps3/360)") == 0) {
             //this.gameObject.transform.rotation = Quaternion.AngleAxis(0, Vector3.right);
         }
 
-        if (Input.GetAxis("LeftVertical (ps3)") > 0.5f) {
+        if (Input.GetAxis("LeftVertical (ps3/360)") > 0.5f || Input.GetKey("w")) {
             verticalSpeed += (verticalTopSpeed - verticalSpeed) / 10f;
-        } else if (Input.GetAxis("LeftVertical (ps3)") < -0.5f) {
+        } else if (Input.GetAxis("LeftVertical (ps3/360)") < -0.5f || Input.GetKey("s")) {
             verticalSpeed -= (verticalTopSpeed - Mathf.Abs(verticalSpeed)) / 10f;
         } else
             verticalSpeed += (0 - verticalSpeed) / 10f;
 
-        if (Input.GetAxis("LeftHorizontal (ps3)") > 0)
+        if (Input.GetAxis("LeftHorizontal (ps3/360)") > 0 || Input.GetKey("d"))
             this.gameObject.transform.Rotate(0, 1, 0);
-        if (Input.GetAxis("LeftHorizontal (ps3)") < 0)
+        if (Input.GetAxis("LeftHorizontal (ps3/360)") < 0 || Input.GetKey("a"))
             this.gameObject.transform.Rotate(0, -1, 0);
 
         //final adjustments
