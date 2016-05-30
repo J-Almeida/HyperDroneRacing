@@ -1,7 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class InputMovement : MonoBehaviour {
+public class DroneBehaviour : MonoBehaviour {
+
+    [Space(10)]
+    [Tooltip("Current number of laps completed by the drone.")]
+    public int currentNumberOfLaps = 0;
+    [Space(10)]
 
     [Tooltip("Camera to follow the drone. This field is mandatory for proper functioning.")]
     public Camera camera;

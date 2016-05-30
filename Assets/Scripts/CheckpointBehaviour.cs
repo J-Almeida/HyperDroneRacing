@@ -27,17 +27,33 @@ public class CheckpointBehaviour : MonoBehaviour {
         }
 
         //add drone if previous checkpoint has had the same drone cross it
-        if (previous == null) {
+        if (getCurrentIndex() == 0) {
             droneList.Add(other.transform.root.gameObject);
             this.transform.root.SendMessage("LapCheck");
+            Debug.Log("First CP");
         } else {
-            foreach (var drone in previous.GetComponentInChildren<CheckpointBehaviour>().droneList) {
+            foreach (var drone in this.transform.root.GetComponent<CourseBehaviour>().checkpoints[getCurrentIndex() - 1].GetComponentInChildren<CheckpointBehaviour>().droneList) {
                 if (drone == other.transform.root.gameObject) {
                     droneList.Add(other.transform.root.gameObject);
                     this.transform.root.SendMessage("LapCheck");
+                    Debug.Log(getCurrentIndex());
+                    Debug.Log("Another CP");
+
+                    if (getCurrentIndex() == this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count - 1)
+                        other.GetComponent<DroneBehaviour>().currentNumberOfLaps++;
                 } else
                     return;
             }
         }
+    }
+
+    //gets this checkpoint index in course
+    int getCurrentIndex() {
+        for(int i = 0; i < this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count; i++) {
+            if (this.transform.parent.gameObject == this.transform.root.GetComponent<CourseBehaviour>().checkpoints[i].gameObject)
+                return i;
+        }
+
+        return -1;
     }
 }

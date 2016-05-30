@@ -19,10 +19,8 @@ public class CourseBehaviour : MonoBehaviour {
 
     // Checks drones for lap completion and updates required data
     void LapCheck () {
-        //TODO: Use map to count checkpoints per drone
-        //List<GameObject> 
-
-        for(int i = 0; i < this.transform.childCount; i++) {
+        
+        for(int i = 0; i < checkpoints.Count; i++) {
             //this.transform.GetChild(i).GetComponentInChildren<CheckpointBehaviour>().droneList[i];
         }
     }
