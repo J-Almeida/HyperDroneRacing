@@ -2,7 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class csHellicopter : MonoBehaviour {
+public class csHellicopter : MonoBehaviour
+{
 
     public KeyCode UpKey;
     public KeyCode DownKey;
@@ -15,16 +16,16 @@ public class csHellicopter : MonoBehaviour {
     public KeyCode EngineOnOffKey;
 
     public GameObject[] MainMotor; //Helicoptor Big Propeller. Use Y Rotate Value.
-    // public GameObject[] SubMotor; //Helicoptor Small Propeller. User X RotateValue.
-    // public AudioSource _AudioSource; //Helicoptor Engine Sound.
+                                   // public GameObject[] SubMotor; //Helicoptor Small Propeller. User X RotateValue.
+                                   // public AudioSource _AudioSource; //Helicoptor Engine Sound.
 
     public float MainMotorRotateVelocity;
     // public float SubMotorRotateVelocity;
 
-    float UpDownVelocity = 0.0f; 
+    float verticalForceMultiplier = 0.0f;
     float MainMotorRotation = 0.0f;
     // float SubMotorRotation = 0.0f;
-    
+
     public float UpDownValue;
     float UpDown;
     float yUpDown;
@@ -42,13 +43,16 @@ public class csHellicopter : MonoBehaviour {
     float LeftRightSpin;
     float yLeftRightSpin;
 
-    bool EngineTurnOnOff = false;
+    bool engineIsOn = false;
     float EngineValue = 0.0f;
 
 
+    float hoverValue;
+    bool isHovering;
 
     // debug
     public GameObject debugText;
+    public GameObject debugText2;
 
     public enum ControlState
     {
@@ -58,27 +62,52 @@ public class csHellicopter : MonoBehaviour {
 
     public ControlState ControlType = new ControlState();
 
+    void Awake()
+    {
+        // hoverValue = 10.0f;
+        hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
+        // ^ vai ser o valor base, porque contraria o peso
+        
+
+        // vai ter de ser uma força decrescente para baixo se ele sobe e decrescente para cima se ele desce
+        // com base em manter a altitude, talvez
+
+        print("hovering set to " + hoverValue);
+    }
+
+
     void FixedUpdate()
     {
-        if (EngineTurnOnOff)
+        if (engineIsOn)
         {
-            GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * UpDownValue * UpDownVelocity);
+            if (isHovering)
+                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * hoverValue);
+            else
+                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * UpDownValue * verticalForceMultiplier);
+            
 
+
+            /*
             if (transform.position.y > 100)
                 GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * UpDownValue * UpDownVelocity);
+            */
 
             // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f);
             UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.015f);
 
-    
+            // se o keyvalue for zero, a força aplicada vai ser sempre zero
+            // fazer clamp com um mínimo igual ao peso se estiver hovering?
 
-        InvokeRepeating("updateDebugText", 0.0f, 0.5f);
 
-            /*
+            InvokeRepeating("updateDebugText", 0.0f, 0.5f);
+
+
             // restringir o movimento vertical quando não se está a carregar nas teclas (não diretamente mas através do UpDown)
-            if (UpDown == 0) {
+            /*
+            if (UpDown == 0)
+            {
                 this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-                UpDown = 0.0f;
+                UpDown = 0.0f; // ?
             }
             else
             {
@@ -94,19 +123,7 @@ public class csHellicopter : MonoBehaviour {
                 LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1, 0.1f);
             }
 
-            else if (ControlType == ControlState.Mouse)
-            {
-                //Pitch Value
-                UpDownTurn = Input.GetAxis("Mouse Y");
-                Pitch -= UpDownTurn * Time.fixedDeltaTime *0.01f;
-                Pitch = Mathf.Clamp(Pitch, -1.2f, 1.2f);
-
-                //Yaw Value
-                LeftRightTurn = Input.GetAxis("Mouse X");
-                Yaw += LeftRightTurn * Time.fixedDeltaTime *0.01f;
-
-                LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1, 0.1f);
-            }
+            // else if (ControlType == ControlState.Mouse) // ...
 
             //Pitch Value
             Pitch += UpDownTurn * Time.fixedDeltaTime;
@@ -122,18 +139,18 @@ public class csHellicopter : MonoBehaviour {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
         }
     }
-	
-	void Update ()
+
+    void Update()
     {
         // SoundControl(); // Check Helicoptor Engine Sound
         MotorRotateControl(); // Check Motor Rotate State
         MotorVelocityContorl(); // Check Helicoptor UpDown State
         EngineControl(); // Check Engine Turn On/Off
-	}
+    }
 
-    float KeyValue(KeyCode A,KeyCode B, float Value , float yValue , float _float , float SmoothTime)
+    float KeyValue(KeyCode A, KeyCode B, float Value, float yValue, float _float, float SmoothTime)
     {
-        if(Input.GetKey(A))
+        if (Input.GetKey(A))
             Value -= Time.deltaTime * _float;
         else if (Input.GetKey(B))
             Value += Time.deltaTime * _float;
@@ -160,24 +177,48 @@ public class csHellicopter : MonoBehaviour {
 
     void MotorVelocityContorl()
     {
-        if (EngineTurnOnOff)
+        if (engineIsOn)
         {
-            float Hovering = (Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y) / UpDownValue); //for maintain altitude.
+            // hovering = (Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y) / UpDownValue); //for maintain altitude.
 
             if (UpDown != 0.0f)
-                UpDownVelocity += UpDown * 0.1f; //if Input Up/Down Axes, Increace UpDownVelocity for Increace altitude.
-            else
-                UpDownVelocity = Mathf.Lerp(UpDownVelocity, Hovering, Time.deltaTime); //if not input Up/Down Axes, Hovering.
+            {
+                verticalForceMultiplier += UpDown * 0.1f; //if Input Up/Down Axes, Increace UpDownVelocity for Increace altitude.
+                isHovering = false;
+                debugText2.GetComponent<Text>().text = "not hovering";
+            }
+            else { // hover if up/down keys are not pressed
+
+                // UpDownVelocity = Mathf.Lerp(UpDownVelocity, Hovering, Time.deltaTime); //if not input Up/Down Axes, Hovering.
+                // UpDownVelocity = Mathf.Lerp(UpDownVelocity, 0, Time.deltaTime); //if not input Up/Down Axes, Hovering.
+
+                isHovering = true;
+                debugText2.GetComponent<Text>().text = "hovering";
+
+
+                verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime);
+                //if not input Up/Down Axes, Hovering.
+                
+
+                // public static function Lerp(a: float, b: float, t: float): float; 
+                // The parameter t is clamped to the range [0, 1].
+                // When t = 0 returns a.
+                // When t = 1 return b.
+                // When t = 0.5 returns the midpoint of a and b.
+                // aplicar um smooth = 2.0f ou parecido para a interpolação ser mais rápida, e.g.: Time.deltaTime * smooth
+
+                // debugText2.GetComponent<Text>().text = Hovering.ToString();
+            }
         }
-       CheckUpDownVelocity();
+        CheckUpDownVelocity();
     }
 
     void CheckUpDownVelocity()
     {
-        if (UpDownVelocity > 1.0f)
-            UpDownVelocity = 1.0f;
-        else if (UpDownVelocity < 0.1f)
-            UpDownVelocity = 0.1f;
+        if (verticalForceMultiplier > 1.0f)
+            verticalForceMultiplier = 1.0f;
+        else if (verticalForceMultiplier < 0.1f)
+            verticalForceMultiplier = 0.1f;
     }
 
     void MotorRotateControl()
@@ -215,13 +256,13 @@ public class csHellicopter : MonoBehaviour {
     {
         if (Input.GetKeyDown(EngineOnOffKey))
         {
-            if (EngineTurnOnOff)
-                EngineTurnOnOff = false;
+            if (engineIsOn)
+                engineIsOn = false;
             else
-                EngineTurnOnOff = true;
+                engineIsOn = true;
         }
 
-        if (EngineTurnOnOff == true)
+        if (engineIsOn == true)
         {
             if (EngineValue < 1)
                 EngineValue += Time.deltaTime;
@@ -229,7 +270,7 @@ public class csHellicopter : MonoBehaviour {
                 EngineValue = 1;
         }
 
-        else if (EngineTurnOnOff == false)
+        else if (engineIsOn == false)
         {
             if (EngineValue > 0)
                 EngineValue -= Time.deltaTime / 2;
@@ -238,12 +279,14 @@ public class csHellicopter : MonoBehaviour {
         }
     }
 
-    
+
     void updateDebugText()
     {
         debugText.GetComponent<Text>().text = UpDown.ToString();
+
+
     }
-    
+
 
     /*
     void SoundControl()
