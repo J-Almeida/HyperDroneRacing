@@ -30,14 +30,11 @@ public class CheckpointBehaviour : MonoBehaviour {
         if (getCurrentIndex() == 0) {
             droneList.Add(other.transform.root.gameObject);
             this.transform.root.SendMessage("LapCheck");
-            Debug.Log("First CP");
         } else {
             foreach (var drone in this.transform.root.GetComponent<CourseBehaviour>().checkpoints[getCurrentIndex() - 1].GetComponentInChildren<CheckpointBehaviour>().droneList) {
                 if (drone == other.transform.root.gameObject) {
                     droneList.Add(other.transform.root.gameObject);
                     this.transform.root.SendMessage("LapCheck");
-                    Debug.Log(getCurrentIndex());
-                    Debug.Log("Another CP");
 
                     if (getCurrentIndex() == this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count - 1)
                         other.GetComponent<DroneBehaviour>().currentNumberOfLaps++;
