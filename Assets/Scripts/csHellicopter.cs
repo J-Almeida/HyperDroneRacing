@@ -15,7 +15,7 @@ public class csHellicopter : MonoBehaviour
     public KeyCode RightSpin;
     public KeyCode EngineOnOffKey;
 
-    public GameObject[] MainMotor; //Helicoptor Big Propeller. Use Y Rotate Value.
+    public GameObject[] MainMotor; // Helicoptor Big Propeller. Use Y Rotate Value.
                                    // public GameObject[] SubMotor; //Helicoptor Small Propeller. User X RotateValue.
                                    // public AudioSource _AudioSource; //Helicoptor Engine Sound.
 
@@ -53,6 +53,7 @@ public class csHellicopter : MonoBehaviour
     // debug
     public GameObject debugText;
     public GameObject debugText2;
+    public GameObject debugText3;
 
     public enum ControlState
     {
@@ -80,20 +81,27 @@ public class csHellicopter : MonoBehaviour
     {
         if (engineIsOn)
         {
-            if (isHovering)
+            // get vertical speed
+            float verticalSpeed = this.GetComponent<Rigidbody>().velocity.y;
+            debugText3.GetComponent<Text>().text = "velY = " + verticalSpeed.ToString();
+
+            if (isHovering) { 
                 GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * hoverValue);
+
+                float hoverForce = 1.0f;
+
+                GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * hoverForce * verticalSpeed);
+            }
             else
                 GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * UpDownValue * verticalForceMultiplier);
             
-
-
             /*
             if (transform.position.y > 100)
                 GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * UpDownValue * UpDownVelocity);
             */
 
             // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f);
-            UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.015f);
+            UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
 
             // se o keyvalue for zero, a força aplicada vai ser sempre zero
             // fazer clamp com um mínimo igual ao peso se estiver hovering?
@@ -137,6 +145,7 @@ public class csHellicopter : MonoBehaviour
             Roll = Mathf.Clamp(Roll, -1.2f, 1.2f);
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
+            // transform.rotation = Quaternion.Slerp(droneBody.gameObject.transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
         }
     }
 
