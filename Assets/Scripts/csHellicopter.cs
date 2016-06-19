@@ -51,7 +51,7 @@ public class csHellicopter : MonoBehaviour
     bool isHovering;
 
     // debug
-    public GameObject debugText;
+    public GameObject debugText1;
     public GameObject debugText2;
     public GameObject debugText3;
 
@@ -65,6 +65,9 @@ public class csHellicopter : MonoBehaviour
 
     void Awake()
     {
+        Time.timeScale = 0.5f;
+
+
         // hoverValue = 10.0f;
         hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
         // ^ vai ser o valor base, porque contraria o peso
@@ -100,29 +103,10 @@ public class csHellicopter : MonoBehaviour
                 GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * UpDownValue * UpDownVelocity);
             */
 
-            // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f);
+            // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f); // original
             UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
 
-            // se o keyvalue for zero, a força aplicada vai ser sempre zero
-            // fazer clamp com um mínimo igual ao peso se estiver hovering?
-
-
             InvokeRepeating("updateDebugText", 0.0f, 0.5f);
-
-
-            // restringir o movimento vertical quando não se está a carregar nas teclas (não diretamente mas através do UpDown)
-            /*
-            if (UpDown == 0)
-            {
-                this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-                UpDown = 0.0f; // ?
-            }
-            else
-            {
-                this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            }
-            */
-
 
             if (ControlType == ControlState.KeyBoard)
             {
@@ -160,11 +144,17 @@ public class csHellicopter : MonoBehaviour
     float KeyValue(KeyCode A, KeyCode B, float Value, float yValue, float _float, float SmoothTime)
     {
         if (Input.GetKey(A))
+        { 
             Value -= Time.deltaTime * _float;
+        }
         else if (Input.GetKey(B))
+        { 
             Value += Time.deltaTime * _float;
+        }
         else
+        {
             Value = Mathf.SmoothDamp(Value, 0, ref yValue, SmoothTime);
+        }
 
         Value = Mathf.Clamp(Value, -1, 1);
         return Value;
@@ -192,23 +182,24 @@ public class csHellicopter : MonoBehaviour
 
             if (UpDown != 0.0f)
             {
+                if (isHovering == true)
+                {
+                    verticalForceMultiplier = 0f;
+                    // upDownValue = 0f;
+                }
+
                 verticalForceMultiplier += UpDown * 0.1f; //if Input Up/Down Axes, Increace UpDownVelocity for Increace altitude.
+                debugText2.GetComponent<Text>().text = "(Nhovering) vertForceMult: " + verticalForceMultiplier;
                 isHovering = false;
-                debugText2.GetComponent<Text>().text = "not hovering";
+                // debugText2.GetComponent<Text>().text = "not hovering";
             }
             else { // hover if up/down keys are not pressed
-
-                // UpDownVelocity = Mathf.Lerp(UpDownVelocity, Hovering, Time.deltaTime); //if not input Up/Down Axes, Hovering.
-                // UpDownVelocity = Mathf.Lerp(UpDownVelocity, 0, Time.deltaTime); //if not input Up/Down Axes, Hovering.
-
                 isHovering = true;
-                debugText2.GetComponent<Text>().text = "hovering";
-
-
-                verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime);
+                debugText2.GetComponent<Text>().text = "(hovering) vertForceMult: " + verticalForceMultiplier;
+                
+                verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime * 2.5f);
                 //if not input Up/Down Axes, Hovering.
                 
-
                 // public static function Lerp(a: float, b: float, t: float): float; 
                 // The parameter t is clamped to the range [0, 1].
                 // When t = 0 returns a.
@@ -219,14 +210,14 @@ public class csHellicopter : MonoBehaviour
                 // debugText2.GetComponent<Text>().text = Hovering.ToString();
             }
         }
-        CheckUpDownVelocity();
+        limitVerticalForceMultiplier();
     }
 
-    void CheckUpDownVelocity()
+    void limitVerticalForceMultiplier()
     {
         if (verticalForceMultiplier > 1.0f)
             verticalForceMultiplier = 1.0f;
-        else if (verticalForceMultiplier < 0.1f)
+        else if (verticalForceMultiplier < 0.1f) // nunca fica negativo porque o updown já fica
             verticalForceMultiplier = 0.1f;
     }
 
@@ -243,10 +234,8 @@ public class csHellicopter : MonoBehaviour
             print(MainMotor[0].GetComponent<BoxCollider>().center.ToString());
             */
 
-
             for (int i = 0; i < MainMotor.Length; i++)
                 MainMotor[i].transform.Rotate(0, MainMotorRotation, 0);
-
         }
 
         /*
@@ -291,9 +280,7 @@ public class csHellicopter : MonoBehaviour
 
     void updateDebugText()
     {
-        debugText.GetComponent<Text>().text = UpDown.ToString();
-
-
+        debugText1.GetComponent<Text>().text = "upDown: " + UpDown.ToString();
     }
 
 
