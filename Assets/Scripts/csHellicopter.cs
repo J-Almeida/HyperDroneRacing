@@ -57,7 +57,7 @@ public class csHellicopter : MonoBehaviour
 
     public enum ControlState
     {
-        Mouse,
+        Gamepad,
         KeyBoard
     };
 
@@ -65,18 +65,11 @@ public class csHellicopter : MonoBehaviour
 
     void Awake()
     {
-        Time.timeScale = 0.5f;
-
+        // Time.timeScale = 0.5f;
 
         // hoverValue = 10.0f;
         hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
-        // ^ vai ser o valor base, porque contraria o peso
-        
-
-        // vai ter de ser uma força decrescente para baixo se ele sobe e decrescente para cima se ele desce
-        // com base em manter a altitude, talvez
-
-        print("hovering set to " + hoverValue);
+        // print("hovering set to " + hoverValue);
     }
 
 
@@ -90,32 +83,35 @@ public class csHellicopter : MonoBehaviour
 
             if (isHovering) { 
                 GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * hoverValue);
-
                 float hoverForce = 1.0f;
-
                 GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * hoverForce * verticalSpeed);
             }
             else
                 GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * UpDownValue * verticalForceMultiplier);
             
             /*
-            if (transform.position.y > 100)
+            if (transform.position.y > 100) // altitude limit
                 GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * UpDownValue * UpDownVelocity);
             */
-
-            // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f); // original
-            UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
 
             InvokeRepeating("updateDebugText", 0.0f, 0.5f);
 
             if (ControlType == ControlState.KeyBoard)
             {
+                // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f); // original
+                UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
+
                 UpDownTurn = KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.1f);
                 LeftRightTurn = KeyValue(LeftTurn, RightTurn, LeftRightTurn, yLeftRightTurn, 1.5f, 0.1f);
                 LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1, 0.1f);
             }
-
-            // else if (ControlType == ControlState.Mouse) // ...
+            else if (ControlType == ControlState.Gamepad)
+            { 
+                UpDown = Input.GetAxis("LeftVertical (ps3/360)"); // GetAxis devolve entre 0 e 1
+                LeftRightTurn = Input.GetAxis("LeftHorizontal (ps3/360)");
+                LeftRightSpin = Input.GetAxis("RightHorizontal (ps3/360)");
+                UpDownTurn = -Input.GetAxis("RightVertical (ps3/360)");
+            }
 
             //Pitch Value
             Pitch += UpDownTurn * Time.fixedDeltaTime;
@@ -178,14 +174,11 @@ public class csHellicopter : MonoBehaviour
     {
         if (engineIsOn)
         {
-            // hovering = (Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y) / UpDownValue); //for maintain altitude.
-
             if (UpDown != 0.0f)
             {
                 if (isHovering == true)
                 {
                     verticalForceMultiplier = 0f;
-                    // upDownValue = 0f;
                 }
 
                 verticalForceMultiplier += UpDown * 0.1f; //if Input Up/Down Axes, Increace UpDownVelocity for Increace altitude.
