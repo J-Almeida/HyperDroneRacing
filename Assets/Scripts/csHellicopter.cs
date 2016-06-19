@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class csHellicopter : MonoBehaviour
 {
@@ -54,6 +55,10 @@ public class csHellicopter : MonoBehaviour
     public GameObject debugText1;
     public GameObject debugText2;
     public GameObject debugText3;
+    public GameObject debugText4;
+    public GameObject debugText5;
+
+    float deadzone = 0.001f;
 
     public enum ControlState
     {
@@ -75,6 +80,8 @@ public class csHellicopter : MonoBehaviour
 
     void FixedUpdate()
     {
+        MotorVelocityContorl(); // Check Helicoptor UpDown State
+
         if (engineIsOn)
         {
             // get vertical speed
@@ -113,27 +120,69 @@ public class csHellicopter : MonoBehaviour
                 UpDownTurn = -Input.GetAxis("RightVertical (ps3/360)");
             }
 
+            Vector3 localAngles = this.transform.localEulerAngles;
+
             //Pitch Value
-            Pitch += UpDownTurn * Time.fixedDeltaTime;
-            Pitch = Mathf.Clamp(Pitch, -1.2f, 1.2f);
+            // if (withinBounds(LeftRightSpin, -deadzone, deadzone)) // if input within deadzone
+            if (UpDownTurn != 0f) // if input outside deadzone
+            {
+                Pitch += UpDownTurn * Time.fixedDeltaTime;
+                Pitch = Mathf.Clamp(Pitch, -1.2f, 1.2f);
+            }
+            else // if no input on UpDownTurn
+            {
+                float torqueScale = 0.5f;
+                // debugText4.GetComponent<Text>().text = "dzone, angle: " + localAngles.ToString();
+
+                // estabilizar em relação ao plano yz (roll)
+                GetComponent<Rigidbody>().AddTorque(
+                    Mathf.DeltaAngle(localAngles.x, 0) * torqueScale,
+                    0f,
+                    Mathf.DeltaAngle(localAngles.z, 0) * torqueScale);
+
+                // debugText5.GetComponent<Text>().text = "Tx: " + (Mathf.DeltaAngle(localAngles.x, 0) * torqueScale).ToString() + " Ty: " + (Mathf.DeltaAngle(localAngles.y, 0) * torqueScale).ToString();
+            }
 
             //Yaw Value
             Yaw += LeftRightTurn * Time.fixedDeltaTime;
 
             //Roll Value
-            Roll += -LeftRightSpin * Time.fixedDeltaTime;
-            Roll = Mathf.Clamp(Roll, -1.2f, 1.2f);
+            // if (withinBounds(LeftRightSpin, -deadzone, deadzone)) // if input within deadzone
+            if (LeftRightSpin != 0f) // if input outside deadzone
+            {
+                Roll += -LeftRightSpin * Time.fixedDeltaTime;
+                Roll = Mathf.Clamp(Roll, -1.2f, 1.2f);
+            }
+            else // if no input on LeftRightSpin
+            {
+                float torqueScale = 0.5f;
+                debugText4.GetComponent<Text>().text = "dzone, angle: " + localAngles.ToString();
+
+                // estabilizar em relação ao plano yz (roll)
+                GetComponent<Rigidbody>().AddTorque(
+                    0f,
+                    Mathf.DeltaAngle(localAngles.y, 0) * torqueScale,
+                    Mathf.DeltaAngle(localAngles.z, 0) * torqueScale);
+
+                debugText5.GetComponent<Text>().text = "Tx: " + (Mathf.DeltaAngle(localAngles.x, 0) * torqueScale).ToString() + " Ty: " + (Mathf.DeltaAngle(localAngles.y, 0) * torqueScale).ToString();
+            }
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
             // transform.rotation = Quaternion.Slerp(droneBody.gameObject.transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
         }
     }
 
+    bool withinBounds(float value, double lowerBound, double upperBound)
+    {
+        if (lowerBound >= upperBound)
+            throw new ArgumentException();
+        return ((value >= lowerBound) && (value <= upperBound));
+    }
+
     void Update()
     {
         // SoundControl(); // Check Helicoptor Engine Sound
         MotorRotateControl(); // Check Motor Rotate State
-        MotorVelocityContorl(); // Check Helicoptor UpDown State
         EngineControl(); // Check Engine Turn On/Off
     }
 
@@ -170,6 +219,8 @@ public class csHellicopter : MonoBehaviour
     }
     */
 
+
+
     void MotorVelocityContorl()
     {
         if (engineIsOn)
@@ -181,7 +232,7 @@ public class csHellicopter : MonoBehaviour
                     verticalForceMultiplier = 0f;
                 }
 
-                verticalForceMultiplier += UpDown * 0.1f; //if Input Up/Down Axes, Increace UpDownVelocity for Increace altitude.
+                verticalForceMultiplier += UpDown * 0.1f; // if vertical input, increase verticalForce multiplier to change altitude
                 debugText2.GetComponent<Text>().text = "(Nhovering) vertForceMult: " + verticalForceMultiplier;
                 isHovering = false;
                 // debugText2.GetComponent<Text>().text = "not hovering";
