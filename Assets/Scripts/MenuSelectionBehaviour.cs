@@ -21,7 +21,15 @@ public class MenuSelectionBehaviour : MonoBehaviour {
             currentSelectionIndex++;
         }
         if (Input.GetKeyDown("joystick button 13") || Input.GetKeyDown(KeyCode.Return)) {
-            Application.LoadLevel(1);
+            switch(currentSelectionIndex) {
+                case 0:
+                    Application.LoadLevel(1);
+                    break;
+                case 1:
+                    Application.Quit();
+                    break;
+            }
+            
         }
 
         if (currentSelectionIndex >= options.Count)
