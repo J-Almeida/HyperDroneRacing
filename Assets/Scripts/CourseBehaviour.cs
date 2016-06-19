@@ -6,6 +6,7 @@ public class CourseBehaviour : MonoBehaviour {
 
     public int numberOfLaps = 1;
     public List<GameObject> checkpoints;
+    public List<GameObject> mapCheckpoints;
 
 	// Use this for initialization
 	void Start () {
