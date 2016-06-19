@@ -49,6 +49,7 @@ public class csHellicopter : MonoBehaviour
 
 
     float hoverValue;
+    float hoverAltitude;
     bool isHovering;
 
     // debug
@@ -84,17 +85,13 @@ public class csHellicopter : MonoBehaviour
 
         if (engineIsOn)
         {
+            /*
             // get vertical speed
             float verticalSpeed = this.GetComponent<Rigidbody>().velocity.y;
             debugText3.GetComponent<Text>().text = "velY = " + verticalSpeed.ToString();
+            */
 
-            if (isHovering) { 
-                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * hoverValue);
-                float hoverForce = 1.0f;
-                GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * hoverForce * verticalSpeed);
-            }
-            else
-                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * UpDownValue * verticalForceMultiplier);
+
             
             /*
             if (transform.position.y > 100) // altitude limit
@@ -156,7 +153,7 @@ public class csHellicopter : MonoBehaviour
             else // if no input on LeftRightSpin
             {
                 float torqueScale = 0.5f;
-                debugText4.GetComponent<Text>().text = "dzone, angle: " + localAngles.ToString();
+                // debugText4.GetComponent<Text>().text = "dzone, angle: " + localAngles.ToString();
 
                 // estabilizar em relação ao plano yz (roll)
                 GetComponent<Rigidbody>().AddTorque(
@@ -225,36 +222,50 @@ public class csHellicopter : MonoBehaviour
     {
         if (engineIsOn)
         {
-            if (UpDown != 0.0f)
+            if (UpDown != 0.0f) // if vertical input, increase verticalForce multiplier to change altitude
             {
-                if (isHovering == true)
-                {
-                    verticalForceMultiplier = 0f;
-                }
-
-                verticalForceMultiplier += UpDown * 0.1f; // if vertical input, increase verticalForce multiplier to change altitude
-                debugText2.GetComponent<Text>().text = "(Nhovering) vertForceMult: " + verticalForceMultiplier;
+                verticalForceMultiplier += UpDown * 0.1f;
                 isHovering = false;
-                // debugText2.GetComponent<Text>().text = "not hovering";
+
+                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * UpDownValue * verticalForceMultiplier);
+
+                
+                debugText2.GetComponent<Text>().text = "(Nhovering) vertForceMult: " + verticalForceMultiplier;
+                
             }
             else { // hover if up/down keys are not pressed
-                isHovering = true;
-                debugText2.GetComponent<Text>().text = "(hovering) vertForceMult: " + verticalForceMultiplier;
-                
-                verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime * 2.5f);
-                //if not input Up/Down Axes, Hovering.
-                
-                // public static function Lerp(a: float, b: float, t: float): float; 
-                // The parameter t is clamped to the range [0, 1].
-                // When t = 0 returns a.
-                // When t = 1 return b.
-                // When t = 0.5 returns the midpoint of a and b.
-                // aplicar um smooth = 2.0f ou parecido para a interpolação ser mais rápida, e.g.: Time.deltaTime * smooth
+                if (!isHovering) hoverAltitude = this.transform.position.y; // set hover altitude if not set before (just started hovering)
+                debugText3.GetComponent<Text>().text = "hoverAlt = " + hoverAltitude.ToString();
 
-                // debugText2.GetComponent<Text>().text = Hovering.ToString();
+                isHovering = true;
+                
+                debugText2.GetComponent<Text>().text = "(hovering) vertForceMult: " + verticalForceMultiplier;
+
+                // verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime * 2.5f);
+                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * hoverValue); // base hover power to balance weight
+                float hoverForce = 1.0f;
+
+                float verticalSpeed = this.GetComponent<Rigidbody>().velocity.y; // código antigo
+                // GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * hoverForce * verticalSpeed); // código antigo ; força pelos 0.1~0.3 num hover suave
+                // debugText4.GetComponent<Text>().text = "force = " + (-Vector3.up * hoverForce * verticalSpeed).ToString();
+                
+                if (this.transform.position.y > hoverAltitude)
+                {
+                    Vector3 force = -Vector3.up * Mathf.Abs(hoverForce * verticalSpeed * (this.transform.position.y - hoverAltitude) / hoverAltitude);
+                    GetComponent<Rigidbody>().AddRelativeForce(force);
+                    debugText4.GetComponent<Text>().text = "force = " + force.ToString();
+                }
+                else
+                {
+                    Vector3 force = Vector3.up * Mathf.Abs(hoverForce * verticalSpeed * (this.transform.position.y - hoverAltitude) / hoverAltitude);
+                    GetComponent<Rigidbody>().AddRelativeForce(force);
+                    debugText4.GetComponent<Text>().text = "force = " + force.ToString();
+                }
+
+                
             }
         }
-        limitVerticalForceMultiplier();
+        limitVerticalForceMultiplier(); // VER
     }
 
     void limitVerticalForceMultiplier()
