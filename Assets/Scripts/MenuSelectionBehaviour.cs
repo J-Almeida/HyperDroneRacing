@@ -17,10 +17,10 @@ public class MenuSelectionBehaviour : MonoBehaviour {
         if (Input.GetKeyDown("joystick button 4") || Input.GetKeyDown("up")) {
             currentSelectionIndex--;
         }
-        if (Input.GetKeyDown("joystick button 6") || Input.GetKey("down")) {
+        if (Input.GetKeyDown("joystick button 6") || Input.GetKeyDown("down")) {
             currentSelectionIndex++;
         }
-        if (Input.GetKeyDown("joystick button 13")) {
+        if (Input.GetKeyDown("joystick button 13") || Input.GetKeyDown(KeyCode.Return)) {
             Application.LoadLevel(1);
         }
 
