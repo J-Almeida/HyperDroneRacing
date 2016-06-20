@@ -195,7 +195,7 @@ public class csHellicopter : MonoBehaviour
 
                 GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
                 // float hoverForce = 1.0f;
-                float hoverForce = 10.0f; // mais forte para compensar o explicado no HorizontalSpeedControl()
+                float hoverForce = 2.0f;
                 GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed);
 
                 debugText2.GetComponent<Text>().text = "hovering force: " + hoverForce * verticalSpeed;
@@ -209,10 +209,16 @@ public class csHellicopter : MonoBehaviour
     // as forças aplicadas nesta função são relativas ao drone
     // logo quando o drone está inclinado para a frente, a força "para a frente" vai ter um componente para baixo
     {
-        Vector3 relativeForwardForce = Vector3.forward * Pitch;
-        Vector3 relativeSideForce = Vector3.left * Roll;
-        GetComponent<Rigidbody>().AddRelativeForce(relativeForwardForce);
-        GetComponent<Rigidbody>().AddRelativeForce(relativeSideForce);
+        Vector3 forwardForce = Vector3.forward * Pitch;
+        Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
+        Vector3 sideForce = Vector3.left * Roll;
+        Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
+
+        transformedForwardForce.y = 0f;
+        transformedSideForce.y = 0f;
+
+        GetComponent<Rigidbody>().AddForce(transformedForwardForce);
+        GetComponent<Rigidbody>().AddForce(transformedSideForce);
     }
 
     void limitVerticalForceMultiplier()
