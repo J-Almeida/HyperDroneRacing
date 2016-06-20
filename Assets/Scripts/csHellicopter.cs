@@ -51,6 +51,7 @@ public class csHellicopter : MonoBehaviour
 
     float hoverValue;
     bool isHovering;
+    float stabilizationScale = 2.0f; // higher value stops the drone faster
 
     // debug
     public GameObject debugText1;
@@ -209,16 +210,39 @@ public class csHellicopter : MonoBehaviour
     // as forças aplicadas nesta função são relativas ao drone
     // logo quando o drone está inclinado para a frente, a força "para a frente" vai ter um componente para baixo
     {
-        Vector3 forwardForce = Vector3.forward * Pitch;
-        Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
-        Vector3 sideForce = Vector3.left * Roll;
-        Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
+        if (UpDownTurn != 0) // se está a ser utilizado o analógico correspondente
+        {
+            Vector3 forwardForce = Vector3.forward * Pitch;
+            Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
+            transformedForwardForce.y = 0f;
+            GetComponent<Rigidbody>().AddForce(transformedForwardForce);
+        }
+        else // estabiliza o drone, aplicando uma velocidade no sentido oposto
+        {
+            float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
 
-        transformedForwardForce.y = 0f;
-        transformedSideForce.y = 0f;
+            Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
+            Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
+            transformedBackwardForce.y = 0f;
+            GetComponent<Rigidbody>().AddForce(transformedBackwardForce);
+        }
 
-        GetComponent<Rigidbody>().AddForce(transformedForwardForce);
-        GetComponent<Rigidbody>().AddForce(transformedSideForce);
+        if (LeftRightSpin != 0) // se está a ser utilizado o analógico correspondente
+        {
+            Vector3 sideForce = Vector3.left * Roll;
+            Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
+            transformedSideForce.y = 0f;
+            GetComponent<Rigidbody>().AddForce(transformedSideForce);
+        }
+        else // estabiliza o drone, aplicando uma velocidade no sentido oposto
+        {
+            float localSidewaysSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).x;
+
+            Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
+            Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
+            transformedSideForce.y = 0f;
+            GetComponent<Rigidbody>().AddForce(transformedSideForce);
+        }
     }
 
     void limitVerticalForceMultiplier()
