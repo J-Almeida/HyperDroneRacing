@@ -7,6 +7,8 @@ public class MenuSelectionBehaviour : MonoBehaviour {
     public int currentSelectionIndex = 0;
     public List<GameObject> options;
 
+    private bool started = false;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -21,15 +23,18 @@ public class MenuSelectionBehaviour : MonoBehaviour {
             currentSelectionIndex++;
         }
         if (Input.GetKeyDown("joystick button 13") || Input.GetKeyDown(KeyCode.Return)) {
-            switch(currentSelectionIndex) {
-                case 0:
-                    Application.LoadLevel(1);
-                    break;
-                case 1:
-                    Application.Quit();
-                    break;
+            if (started) {
+                switch (currentSelectionIndex) {
+                    case 0:
+                        Application.LoadLevel(1);
+                        break;
+                    case 1:
+                        Application.Quit();
+                        break;
+                }
+            } else {
+                started = true;
             }
-            
         }
 
         if (currentSelectionIndex >= options.Count)
