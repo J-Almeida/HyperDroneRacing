@@ -42,9 +42,12 @@ public class csHellicopter : MonoBehaviour
     float LeftRightSpin;
     float yLeftRightSpin;
 
+    float rightAnalogSensitivity = 60.0f;
+    float maximumPitchDeg = 35.0f;
+    float maximumRollDeg = 35.0f;
+
     bool engineIsOn = false;
     float EngineValue = 0.0f;
-
 
     float hoverValue;
     bool isHovering;
@@ -83,16 +86,7 @@ public class csHellicopter : MonoBehaviour
 
             InvokeRepeating("updateDebugText", 0.0f, 0.5f);
 
-            if (ControlType == ControlState.KeyBoard)
-            {
-                // UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.01f); // original
-                UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
-
-                UpDownTurn = KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.1f);
-                LeftRightTurn = KeyValue(LeftTurn, RightTurn, LeftRightTurn, yLeftRightTurn, 1.5f, 0.1f);
-                LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1, 0.1f);
-            }
-            else if (ControlType == ControlState.Gamepad)
+            if (ControlType == ControlState.Gamepad)
             {
                 UpDown = Input.GetAxis("LeftVertical (ps3/360)"); // GetAxis devolve entre 0 e 1
                 LeftRightTurn = Input.GetAxis("LeftHorizontal (ps3/360)");
@@ -101,20 +95,22 @@ public class csHellicopter : MonoBehaviour
             }
 
             //Pitch Value
-            Pitch += UpDownTurn * Time.fixedDeltaTime;
-            Pitch = Mathf.Clamp(Pitch, -1.2f, 1.2f);
+            // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
+            Pitch = UpDownTurn * rightAnalogSensitivity;
+            Pitch = Mathf.Clamp(Pitch, -maximumPitchDeg, maximumPitchDeg);
 
             //Yaw Value
-            Yaw += LeftRightTurn * Time.fixedDeltaTime;
+            Yaw += LeftRightTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
 
             //Roll Value
-            Roll += -LeftRightSpin * Time.fixedDeltaTime;
-            Roll = Mathf.Clamp(Roll, -1.2f, 1.2f);
+            // Roll += -LeftRightSpin * Time.fixedDeltaTime * rightAnalogSensitivity; 
+            Roll = -LeftRightSpin * rightAnalogSensitivity;
+            Roll = Mathf.Clamp(Roll, -maximumRollDeg, maximumRollDeg);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
-            // transform.rotation = Quaternion.Slerp(droneBody.gameObject.transform.rotation, Quaternion.EulerRotation(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
+            // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler( Mathf.Min(Pitch, 45.0f), Yaw, Roll), Time.fixedDeltaTime * 1.5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(Pitch, Yaw, Roll), Time.fixedDeltaTime * 1.5f);
 
-            MotorVelocityContorl(); // Check Helicoptor UpDown State
+            MotorControl();
         }
     }
 
@@ -158,7 +154,13 @@ public class csHellicopter : MonoBehaviour
     }
     */
 
-    void MotorVelocityContorl()
+    void MotorControl()
+    {
+        VerticalSpeedControl();
+        HorizontalSpeedControl();
+    }
+
+    void VerticalSpeedControl()
     {
         // get vertical speed
         float verticalSpeed = this.GetComponent<Rigidbody>().velocity.y;
@@ -168,25 +170,32 @@ public class csHellicopter : MonoBehaviour
         {
             if (UpDown != 0.0f) // not hovering
             {
-                // verticalForceMultiplier += UpDown * 0.1f;
-                verticalForceMultiplier = UpDown * 15.0f;
-
                 isHovering = false;
+                verticalForceMultiplier = UpDown * 15.0f;
                 // debugText2.GetComponent<Text>().text = "not hovering";
 
                 GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
-                GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * verticalForceMultiplier);
+
+                /*
+                Vector3 nonHoverForce = Vector3.up * verticalForceMultiplier;
+                GetComponent<Rigidbody>().AddRelativeForce(nonHoverForce);
+                */ // comentado para evitar modificar velocidade horizontal na função VerticalSpeedControl
+
+                Vector3 nonHoverForce = Vector3.up * verticalForceMultiplier;
+                nonHoverForce.x = 0f;
+                nonHoverForce.z = 0f;
+                GetComponent<Rigidbody>().AddForce(nonHoverForce);
+
                 debugText2.GetComponent<Text>().text = "(Nhovering) vertForceMult: " + verticalForceMultiplier;
             }
             else { // hover if up/down keys are not pressed
-
-                // comportamento esperado é ele inclinar mas não mexer
 
                 isHovering = true;
                 verticalForceMultiplier = 0f;
 
                 GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
-                float hoverForce = 1.0f;
+                // float hoverForce = 1.0f;
+                float hoverForce = 10.0f; // mais forte para compensar o explicado no HorizontalSpeedControl()
                 GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed);
 
                 debugText2.GetComponent<Text>().text = "hovering force: " + hoverForce * verticalSpeed;
@@ -194,6 +203,16 @@ public class csHellicopter : MonoBehaviour
             }
         }
         limitVerticalForceMultiplier();
+    }
+
+    void HorizontalSpeedControl()
+    // as forças aplicadas nesta função são relativas ao drone
+    // logo quando o drone está inclinado para a frente, a força "para a frente" vai ter um componente para baixo
+    {
+        Vector3 relativeForwardForce = Vector3.forward * Pitch;
+        Vector3 relativeSideForce = Vector3.left * Roll;
+        GetComponent<Rigidbody>().AddRelativeForce(relativeForwardForce);
+        GetComponent<Rigidbody>().AddRelativeForce(relativeSideForce);
     }
 
     void limitVerticalForceMultiplier()
@@ -217,7 +236,7 @@ public class csHellicopter : MonoBehaviour
             print(MainMotor[0].GetComponent<BoxCollider>().center.ToString());
             */
 
-            for (int i = 0; i < MainMotor.Length; i++)
+                for (int i = 0; i < MainMotor.Length; i++)
                 MainMotor[i].transform.Rotate(0, MainMotorRotation, 0);
         }
 
