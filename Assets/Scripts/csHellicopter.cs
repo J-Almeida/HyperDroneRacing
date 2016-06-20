@@ -22,9 +22,16 @@ public class csHellicopter : MonoBehaviour
     public float MainMotorRotateVelocity;
     // public float SubMotorRotateVelocity;
 
-    float verticalForceMultiplier = 0.0f;
+    float verticalForceScale = 0.0f;
+    float VerticalForceMultiplier = 15.0f;
     float MainMotorRotation = 0.0f;
     // float SubMotorRotation = 0.0f;
+
+    public float MaxEnginePowerVertical;
+    public float MaxEnginePowerHorizontal;
+    public float MaxEnginePowerTotal;
+    public float CurrentEnginePowerVertical = 0f;
+    public float CurrentEnginePowerHorizontal = 0f;
 
     float UpDown;
     float yUpDown;
@@ -57,6 +64,7 @@ public class csHellicopter : MonoBehaviour
     public GameObject debugText1;
     public GameObject debugText2;
     public GameObject debugText3;
+    public GameObject debugText4;
 
     public enum ControlState
     {
@@ -73,6 +81,15 @@ public class csHellicopter : MonoBehaviour
         // hoverValue = 10.0f;
         hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
         // print("hovering set to " + hoverValue);
+
+        MaxEnginePowerVertical = hoverValue + VerticalForceMultiplier; // valor base + máximo para verticalForce Scale
+        MaxEnginePowerHorizontal = (maximumPitchDeg + maximumRollDeg) / 2;
+        MaxEnginePowerTotal = MaxEnginePowerVertical + MaxEnginePowerHorizontal;
+        // print("MaxEnginePowerTotal: " + MaxEnginePowerTotal);
+
+        // maxEnginePower = máximo vertical + máximo horizontal
+        // máximo vertical = hoverValue + max VerticalForceScale = hovervalue + max upDown * verticalForceMultiplier = hovervalue + verticalForceMultiplier
+        // máximo horizontal = máximo frente + máximo lado = max Pitch + max Roll = maximumPitchDeg + maximumRollDeg
     }
 
 
@@ -157,24 +174,29 @@ public class csHellicopter : MonoBehaviour
 
     void MotorControl()
     {
+        CurrentEnginePowerVertical = hoverValue;
+        CurrentEnginePowerHorizontal = 0f;
         VerticalSpeedControl();
         HorizontalSpeedControl();
+
+        debugText2.GetComponent<Text>().text = "CEPvert = " + (CurrentEnginePowerVertical / MaxEnginePowerVertical) * 100 + " %";
+        debugText3.GetComponent<Text>().text = "CEPhori = " + (CurrentEnginePowerHorizontal / MaxEnginePowerHorizontal) * 100 + " %";
+        debugText4.GetComponent<Text>().text = "TEP = " + (CurrentEnginePowerVertical + CurrentEnginePowerHorizontal) / MaxEnginePowerTotal * 100 + " %";
+
+        // simplesmente somar as 2 percentagens divididas?
     }
 
     void VerticalSpeedControl()
     {
         // get vertical speed
         float verticalSpeed = this.GetComponent<Rigidbody>().velocity.y;
-        debugText3.GetComponent<Text>().text = "velY = " + verticalSpeed.ToString();
 
         if (engineIsOn)
         {
             if (UpDown != 0.0f) // not hovering
             {
                 isHovering = false;
-                verticalForceMultiplier = UpDown * 15.0f;
-                // debugText2.GetComponent<Text>().text = "not hovering";
-
+                verticalForceScale = UpDown * VerticalForceMultiplier;
                 GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
 
                 /*
@@ -182,33 +204,32 @@ public class csHellicopter : MonoBehaviour
                 GetComponent<Rigidbody>().AddRelativeForce(nonHoverForce);
                 */ // comentado para evitar modificar velocidade horizontal na função VerticalSpeedControl
 
-                Vector3 nonHoverForce = Vector3.up * verticalForceMultiplier;
+                Vector3 nonHoverForce = Vector3.up * verticalForceScale;
                 nonHoverForce.x = 0f;
                 nonHoverForce.z = 0f;
                 GetComponent<Rigidbody>().AddForce(nonHoverForce);
 
-                debugText2.GetComponent<Text>().text = "(Nhovering) vertForceMult: " + verticalForceMultiplier;
+                CurrentEnginePowerVertical += Mathf.Abs(verticalForceScale);
             }
             else { // hover if up/down keys are not pressed
-
                 isHovering = true;
-                verticalForceMultiplier = 0f;
-
+                verticalForceScale = 0f;
                 GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
-                // float hoverForce = 1.0f;
                 float hoverForce = 2.0f;
                 GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed);
 
-                debugText2.GetComponent<Text>().text = "hovering force: " + hoverForce * verticalSpeed;
+                CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed); // cuidado porque o verticalSpeed não tem limites rígidos
+
                 // verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime * 2.5f);
             }
         }
-        limitVerticalForceMultiplier();
+        // limitVerticalForceScale();
     }
 
     void HorizontalSpeedControl()
     // as forças aplicadas nesta função são relativas ao drone
     // logo quando o drone está inclinado para a frente, a força "para a frente" vai ter um componente para baixo
+    // isto é eliminado com a eliminação da componente y da força transformada
     {
         if (UpDownTurn != 0) // se está a ser utilizado o analógico correspondente
         {
@@ -216,6 +237,8 @@ public class csHellicopter : MonoBehaviour
             Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
             transformedForwardForce.y = 0f;
             GetComponent<Rigidbody>().AddForce(transformedForwardForce);
+
+            CurrentEnginePowerHorizontal = Mathf.Abs(Pitch);
         }
         else // estabiliza o drone, aplicando uma velocidade no sentido oposto
         {
@@ -225,6 +248,8 @@ public class csHellicopter : MonoBehaviour
             Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
             transformedBackwardForce.y = 0f;
             GetComponent<Rigidbody>().AddForce(transformedBackwardForce);
+
+            CurrentEnginePowerHorizontal = Mathf.Abs(localForwardSpeed * stabilizationScale);
         }
 
         if (LeftRightSpin != 0) // se está a ser utilizado o analógico correspondente
@@ -233,6 +258,8 @@ public class csHellicopter : MonoBehaviour
             Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
             transformedSideForce.y = 0f;
             GetComponent<Rigidbody>().AddForce(transformedSideForce);
+
+            CurrentEnginePowerHorizontal = Mathf.Abs(Roll);
         }
         else // estabiliza o drone, aplicando uma velocidade no sentido oposto
         {
@@ -242,16 +269,20 @@ public class csHellicopter : MonoBehaviour
             Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
             transformedSideForce.y = 0f;
             GetComponent<Rigidbody>().AddForce(transformedSideForce);
+
+            CurrentEnginePowerHorizontal = Mathf.Abs(localSidewaysSpeed * stabilizationScale);
         }
     }
 
-    void limitVerticalForceMultiplier()
+    /*
+    void limitVerticalForceScale()
     {
-        if (verticalForceMultiplier > 1.0f)
-            verticalForceMultiplier = 1.0f;
-        else if (verticalForceMultiplier < 0.1f) // nunca fica negativo porque o updown já fica
-            verticalForceMultiplier = 0.1f;
+        if (verticalForceScale > 1.0f)
+            verticalForceScale = 1.0f;
+        else if (verticalForceScale < 0.1f) // nunca fica negativo porque o updown já fica
+            verticalForceScale = 0.1f;
     }
+    */
 
     void MotorRotateControl()
     {
