@@ -44,13 +44,15 @@ public class CheckpointBehaviour : MonoBehaviour {
             }
         }
 
-        //make next checkpoint visible
+        //make next checkpoint highlighted
         if (getCurrentIndex() + 1 >= this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count) {
             this.transform.root.GetComponent<CourseBehaviour>().checkpoints[0].SetActive(true);
+            this.transform.root.GetComponent<CourseBehaviour>().mapCheckpoints[this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count - 1].SetActive(true);
             this.transform.root.GetComponent<CourseBehaviour>().mapCheckpoints[0].SetActive(false);
         } else {
             this.transform.root.GetComponent<CourseBehaviour>().checkpoints[getCurrentIndex() + 1].SetActive(true);
             this.transform.root.GetComponent<CourseBehaviour>().mapCheckpoints[getCurrentIndex() + 1].SetActive(false);
+            this.transform.root.GetComponent<CourseBehaviour>().mapCheckpoints[getCurrentIndex()].SetActive(true);
         }
         //make this one regular again
         this.transform.root.GetComponent<CourseBehaviour>().checkpoints[getCurrentIndex()].SetActive(false);
