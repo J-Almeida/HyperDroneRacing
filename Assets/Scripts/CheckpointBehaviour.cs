@@ -38,7 +38,7 @@ public class CheckpointBehaviour : MonoBehaviour {
 
                     if (getCurrentIndex() == this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count - 1) {
                         other.GetComponent<DroneBehaviour>().currentNumberOfLaps++;
-                        //eliminate all drone instances in all checkpoints here
+                        deleteDroneFromAllCheckPoints(drone);
                     }
                 }
             }
@@ -64,5 +64,18 @@ public class CheckpointBehaviour : MonoBehaviour {
         }
 
         return -1;
+    }
+
+    void deleteDroneFromAllCheckPoints(GameObject drone) {
+        foreach(var checkPoint in this.transform.root.GetComponent<CourseBehaviour>().checkpoints) {
+            List<GameObject> tmp = new List<GameObject>(checkPoint.GetComponentInChildren<CheckpointBehaviour>().droneList);
+            for (int i = 0; i < tmp.Count; i++) {
+                if (tmp[i] == drone) {
+                    tmp.RemoveAt(i);
+                    i--;
+                }
+            }
+            checkPoint.GetComponentInChildren<CheckpointBehaviour>().droneList = tmp;
+        }
     }
 }
