@@ -62,6 +62,12 @@ public class NewDroneController : MonoBehaviour
 
     public float forceScale = 0.5f;
 
+    public float currentBoost = 0.6f; //current progress
+    public Vector2 boostBarPos = new Vector2(20, 20);
+    public Vector2 boostBarSize = new Vector2(250, 30);
+    public Texture2D emptyTex;
+    public Texture2D fullTex;
+
     // debug
     public GameObject debugText1;
     public GameObject debugText2;
@@ -146,6 +152,19 @@ public class NewDroneController : MonoBehaviour
 
             MotorControl();
         }
+    }
+
+    void OnGUI()
+    {
+        // draw the background:
+        GUI.BeginGroup(new Rect(boostBarPos.x, boostBarPos.y, boostBarSize.x, boostBarSize.y));
+        GUI.Box(new Rect(0, 0, boostBarSize.x, boostBarSize.y), emptyTex);
+
+        // draw the filled-in part:
+        GUI.BeginGroup(new Rect(0, (boostBarSize.y - (boostBarSize.y * currentBoost)), boostBarSize.x, boostBarSize.y * currentBoost));
+        GUI.Box(new Rect(0, -boostBarSize.y + (boostBarSize.y * currentBoost), boostBarSize.x, boostBarSize.y), fullTex);
+        GUI.EndGroup();
+        GUI.EndGroup();
     }
 
     void Update()
