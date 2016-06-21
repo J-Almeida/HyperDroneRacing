@@ -62,12 +62,6 @@ public class NewDroneController : MonoBehaviour
 
     public float forceScale = 0.5f;
 
-    public float currentBoost = 0.6f; //current progress
-    public Vector2 boostBarPos = new Vector2(20, 20);
-    public Vector2 boostBarSize = new Vector2(250, 30);
-    public Texture2D emptyTex;
-    public Texture2D fullTex;
-
     // debug
     public GameObject debugText1;
     public GameObject debugText2;
@@ -76,13 +70,15 @@ public class NewDroneController : MonoBehaviour
 
     public NewDroneAudio DroneSoundController;
 
+    [SerializeField]
+    private Image BoostMeter;
+    float currentBoost = 1.0f; // current boost value [0-1]
+
     public enum ControlState
     {
         Gamepad,
         KeyBoard
     };
-
-    public enum PlayableSounds { StartEngine, Boost, CrashExplosion, Crash, EngineSound, Ghost, Glitch, Horn, WaterCrash, WaterTouch };
 
     public ControlState ControlType = new ControlState();
 
@@ -99,7 +95,7 @@ public class NewDroneController : MonoBehaviour
         // hoverValue = 10.0f;
         hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
         // print("hovering set to " + hoverValue);
-        print("mass = " + GetComponent<Rigidbody>().mass);
+        // print("mass = " + GetComponent<Rigidbody>().mass);
 
         MaxEnginePowerVertical = hoverValue + VerticalForceMultiplier; // valor base + máximo para verticalForce Scale
         MaxEnginePowerHorizontal = maximumPitchDeg + maximumRollDeg;
@@ -132,7 +128,19 @@ public class NewDroneController : MonoBehaviour
             }
 
             if (Input.GetKeyDown("joystick button 3"))
+            { 
                 DroneSoundController.PlaySound_fixedLength("horn");
+            }
+
+            if (Input.GetKey("joystick button 5"))
+            {
+                print("using boost");
+                UseBoost();
+            }
+            else
+            {
+                ChargeBoost();
+            }
 
             //Pitch Value
             // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
@@ -152,19 +160,6 @@ public class NewDroneController : MonoBehaviour
 
             MotorControl();
         }
-    }
-
-    void OnGUI()
-    {
-        // draw the background:
-        GUI.BeginGroup(new Rect(boostBarPos.x, boostBarPos.y, boostBarSize.x, boostBarSize.y));
-        GUI.Box(new Rect(0, 0, boostBarSize.x, boostBarSize.y), emptyTex);
-
-        // draw the filled-in part:
-        GUI.BeginGroup(new Rect(0, (boostBarSize.y - (boostBarSize.y * currentBoost)), boostBarSize.x, boostBarSize.y * currentBoost));
-        GUI.Box(new Rect(0, -boostBarSize.y + (boostBarSize.y * currentBoost), boostBarSize.x, boostBarSize.y), fullTex);
-        GUI.EndGroup();
-        GUI.EndGroup();
     }
 
     void Update()
@@ -394,6 +389,30 @@ public class NewDroneController : MonoBehaviour
     void updateDebugText()
     {
         debugText1.GetComponent<Text>().text = "upDown: " + UpDown.ToString();
+    }
+
+    void UseBoost()
+    {
+        currentBoost -= Time.fixedDeltaTime;
+        BoostMeter.fillAmount = currentBoost;
+
+        // if (currentBoost > 1.0f) currentBoost = 1.0f;
+        if (currentBoost < 0.0f)
+        {
+            currentBoost = 0.0f;
+            // TODO ativar cooldown do boost
+        }
+    }
+
+    void ChargeBoost()
+    {
+        currentBoost += Time.fixedDeltaTime * 0.5f;
+        BoostMeter.fillAmount = currentBoost;
+
+        if (currentBoost > 1.0f) currentBoost = 1.0f;
+        {
+            currentBoost = 1.0f;
+        }
     }
 
 
