@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class NewDroneAudio : MonoBehaviour
@@ -50,39 +51,53 @@ public class NewDroneAudio : MonoBehaviour
     private NewDroneController m_drone;      // Reference to the aeroplane controller.
     private Rigidbody m_Rigidbody;
 
-    // engine sound
-    public AudioClip m_StartEngineSound;
-    AudioSource m_StartEngineSource;    // Reference to the AudioSource for the start sound.
-
     // boost
+    bool boostSoundPlaying = false;
     public AudioClip m_BoostSound;
     AudioSource m_BoostSoundSource;
 
     // checkpoint
+    bool checkpointSoundPlaying = false;
     public AudioClip m_CheckpointSound;
     AudioSource m_CheckpointSoundSource;
 
+    // crash sound
+    bool crashSoundPlaying = false;
+    public AudioClip m_CrashSound;
+    AudioSource m_CrashSource;
+
     // crash explosion sound
+    bool crashExplosionSoundPlaying = false;
     public AudioClip m_CrashExplosionSound;
     AudioSource m_CrashExplosionSource;
 
     // ghost sound
+    bool ghostSoundPlaying = false;
     public AudioClip m_GhostSound;
     AudioSource m_GhostSource;
 
     // glitch sound
+    bool glitchSoundPlaying = false;
     public AudioClip m_GlitchSound;
     AudioSource m_GlitchSoundSource;
 
     // horn
+    bool hornSoundPlaying = false;
     public AudioClip m_HornSound;
     AudioSource m_HornSoundSource;
 
+    // start engine sound
+    bool startEngineSoundPlaying = false;
+    public AudioClip m_StartEngineSound;
+    AudioSource m_StartEngineSource;    // Reference to the AudioSource for the start sound.
+
     // water crash
+    bool waterCrashSoundPlaying = false;
     public AudioClip m_WaterCrash;
     AudioSource m_WaterCrashSource;
 
     // water touch
+    bool waterTouchSoundPlaying = false;
     public AudioClip m_WaterTouch;
     AudioSource m_WaterTouchSource;
 
@@ -120,16 +135,24 @@ public class NewDroneAudio : MonoBehaviour
         // call update here to set the sounds pitch and volumes before they actually play
         Update();
 
-        // Start the sounds playing.
+        // Start the permanent sounds playing.
         m_EngineSoundSource.PlayDelayed(5.0f);
         // m_WindSoundSource.Play();
-
-
-
+        
         // boost sound
         m_BoostSoundSource = gameObject.AddComponent<AudioSource>();
         m_BoostSoundSource.clip = m_BoostSound;
         m_BoostSoundSource.playOnAwake = false;
+
+        // crash sound
+        m_CrashSource = gameObject.AddComponent<AudioSource>();
+        m_CrashSource.clip = m_CrashSound;
+        m_CrashSource.playOnAwake = false;
+
+        // crash explosion sound
+        m_CrashExplosionSource = gameObject.AddComponent<AudioSource>();
+        m_CrashExplosionSource.clip = m_CrashExplosionSound;
+        m_CrashExplosionSource.playOnAwake = false;
 
         // checkpoint sound
         m_CheckpointSoundSource = gameObject.AddComponent<AudioSource>();
@@ -141,6 +164,11 @@ public class NewDroneAudio : MonoBehaviour
         m_GhostSource.clip = m_GhostSound;
         m_GhostSource.playOnAwake = false;
 
+        // glitch sound
+        m_GlitchSoundSource = gameObject.AddComponent<AudioSource>();
+        m_GlitchSoundSource.clip = m_GlitchSound;
+        m_GlitchSoundSource.playOnAwake = false;
+
         // horn sound
         m_HornSoundSource = gameObject.AddComponent<AudioSource>();
         m_HornSoundSource.clip = m_HornSound;
@@ -151,15 +179,15 @@ public class NewDroneAudio : MonoBehaviour
         m_StartEngineSource.clip = m_StartEngineSound;
         m_StartEngineSource.playOnAwake = false;
 
-        // water touch sound
-        m_WaterTouchSource = gameObject.AddComponent<AudioSource>();
-        m_WaterTouchSource.clip = m_WaterTouch;
-        m_WaterTouchSource.playOnAwake = false;
-
         // water crash sound
         m_WaterCrashSource = gameObject.AddComponent<AudioSource>();
         m_WaterCrashSource.clip = m_WaterCrash;
         m_WaterCrashSource.playOnAwake = false;
+
+        // water touch sound
+        m_WaterTouchSource = gameObject.AddComponent<AudioSource>();
+        m_WaterTouchSource.clip = m_WaterTouch;
+        m_WaterTouchSource.playOnAwake = false;
     }
 
 
@@ -190,33 +218,55 @@ public class NewDroneAudio : MonoBehaviour
     {
         switch (sound)
         {
-            case "crash":
-                PlaySound_aux(m_CrashExplosionSource, false);
-                break;
             case "checkpoint":
+                if (checkpointSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                checkpointSoundPlaying = true;
                 PlaySound_aux(m_CheckpointSoundSource, false);
+                StartCoroutine(DisablePlayingFlag(checkpointSoundPlaying, m_CheckpointSoundSource.clip.length));
+                break;
+            case "crash":
+                if (crashSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                crashSoundPlaying = true;
+                PlaySound_aux(m_CrashSource, false);
+                StartCoroutine(DisablePlayingFlag(crashSoundPlaying, m_CrashSource.clip.length));
                 break;
             case "crashExplosion":
+                if (crashSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                crashExplosionSoundPlaying = true;
                 PlaySound_aux(m_CrashExplosionSource, false);
+                StartCoroutine(DisablePlayingFlag(crashSoundPlaying, m_CrashExplosionSource.clip.length));
                 break;
-                /*
+            /*
             case "engineSound":
-                PlaySound_aux(m_EngineSoundSource, false);
-                break;
-                */
+            PlaySound_aux(m_EngineSoundSource, false);
+            break;
+            */
             case "horn":
+                if (hornSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                hornSoundPlaying = true;
                 PlaySound_aux(m_HornSoundSource, false);
+                StartCoroutine(DisablePlayingFlag(hornSoundPlaying, m_HornSoundSource.clip.length));
                 break;
             case "startEngine":
+                if (startEngineSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                startEngineSoundPlaying = true;
                 PlaySound_aux(m_StartEngineSource, false);
+                StartCoroutine(DisablePlayingFlag(startEngineSoundPlaying, m_StartEngineSource.clip.length));
                 break;
             case "waterCrash":
+                if (waterCrashSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                waterCrashSoundPlaying = true;
                 PlaySound_aux(m_WaterCrashSource, false); // mudar para true?
+                StartCoroutine(DisablePlayingFlag(startEngineSoundPlaying, m_WaterCrashSource.clip.length));
                 break;
             case "waterTouch":
+                if (waterTouchSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                waterTouchSoundPlaying = true;
                 PlaySound_aux(m_WaterTouchSource, false);
+                StartCoroutine(DisablePlayingFlag(startEngineSoundPlaying, m_WaterTouchSource.clip.length));
                 break;
             default:
+                print("ERROR");
                 break;
         }
     }
@@ -241,14 +291,21 @@ public class NewDroneAudio : MonoBehaviour
 
     public void PlaySound_aux(AudioSource source, bool disablesEngineSound) // TODO disable engine sound
     {
+        print("playing sound at " + System.DateTime.Now.ToLongTimeString());
         source.Play();
-        print("start length+ " + m_StartEngineSound.length);
     }
 
     public void PlaySound_aux(AudioSource source, bool disablesEngineSound, float duration) // TODO disable engine sound
     {
         // todo duration
         source.Play();
-        print("start length+ " + m_StartEngineSound.length);
+    }
+
+    IEnumerator DisablePlayingFlag(bool flag, float delay)
+    {
+        print("entered DisablePlayingFlag");
+        yield return new WaitForSeconds(delay + 0.05f);
+        flag = false;
+        print("disabled flag at " + System.DateTime.Now.ToLongTimeString());
     }
 }
