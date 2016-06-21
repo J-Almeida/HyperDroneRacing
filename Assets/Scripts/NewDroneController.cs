@@ -68,16 +68,21 @@ public class NewDroneController : MonoBehaviour
     public GameObject debugText3;
     public GameObject debugText4;
 
+    public NewDroneAudio DroneSoundController;
+
     public enum ControlState
     {
         Gamepad,
         KeyBoard
     };
 
+    public enum PlayableSounds { StartEngine, Boost, CrashExplosion, Crash, EngineSound, Ghost, Glitch, Horn, WaterCrash, WaterTouch };
+
     public ControlState ControlType = new ControlState();
 
     void Awake()
     {
+        DroneSoundController = this.GetComponent<NewDroneAudio>();
         /*
         for (int i = 0; i < MainMotor.Length; i++)
             MainMotor[i].transform.Rotate(90.0f, 0f, 0f);
@@ -340,7 +345,10 @@ public class NewDroneController : MonoBehaviour
             if (engineIsOn)
                 engineIsOn = false;
             else
+            {
+                DroneSoundController.PlaySound_fixedLength("startEngine");
                 engineIsOn = true;
+            }
         }
 
         if (engineIsOn == true)
