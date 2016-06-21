@@ -56,6 +56,9 @@ public class CheckpointBehaviour : MonoBehaviour {
         }
         //make this one regular again
         this.transform.root.GetComponent<CourseBehaviour>().checkpoints[getCurrentIndex()].SetActive(false);
+
+        //play checkpoint sound
+        other.GetComponent<AudioSource>().Play();
     }
 
     //gets this checkpoint index in course

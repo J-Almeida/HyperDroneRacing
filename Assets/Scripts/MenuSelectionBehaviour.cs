@@ -9,6 +9,8 @@ public class MenuSelectionBehaviour : MonoBehaviour {
 
     private bool started = false;
 
+    //private AudioSource = new AudioSource();
+
 	// Use this for initialization
 	void Start () {
 	
@@ -18,9 +20,11 @@ public class MenuSelectionBehaviour : MonoBehaviour {
 	void Update () {
         if (Input.GetKeyDown("joystick button 4") || Input.GetKeyDown("up")) {
             currentSelectionIndex--;
+            GetComponents<AudioSource>()[1].Play();
         }
         if (Input.GetKeyDown("joystick button 6") || Input.GetKeyDown("down")) {
             currentSelectionIndex++;
+            GetComponents<AudioSource>()[1].Play();
         }
         if (Input.GetKeyDown("joystick button 13") || Input.GetKeyDown(KeyCode.Return)) {
             if (started) {
@@ -29,12 +33,18 @@ public class MenuSelectionBehaviour : MonoBehaviour {
                         Application.LoadLevel(1);
                         break;
                     case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
                         Application.Quit();
                         break;
                 }
             } else {
                 started = true;
             }
+
+            GetComponents<AudioSource>()[2].Play();
         }
 
         if (currentSelectionIndex >= options.Count)
@@ -42,6 +52,8 @@ public class MenuSelectionBehaviour : MonoBehaviour {
         if (currentSelectionIndex < 0)
             currentSelectionIndex = options.Count - 1;
 
-        this.transform.position = options[currentSelectionIndex].transform.position;
+        foreach (var option in options)
+            option.SetActive(false);
+        options[currentSelectionIndex].SetActive(true);
     }
 }
