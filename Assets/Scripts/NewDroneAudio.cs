@@ -219,19 +219,19 @@ public class NewDroneAudio : MonoBehaviour
         switch (sound)
         {
             case "checkpoint":
-                if (checkpointSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                if (checkpointSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 checkpointSoundPlaying = true;
                 PlaySound_aux(m_CheckpointSoundSource, false);
                 StartCoroutine(DisablePlayingFlag(checkpointSoundPlaying, m_CheckpointSoundSource.clip.length));
                 break;
             case "crash":
-                if (crashSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                if (crashSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 crashSoundPlaying = true;
                 PlaySound_aux(m_CrashSource, false);
                 StartCoroutine(DisablePlayingFlag(crashSoundPlaying, m_CrashSource.clip.length));
                 break;
             case "crashExplosion":
-                if (crashSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                if (crashSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 crashExplosionSoundPlaying = true;
                 PlaySound_aux(m_CrashExplosionSource, false);
                 StartCoroutine(DisablePlayingFlag(crashSoundPlaying, m_CrashExplosionSource.clip.length));
@@ -242,25 +242,26 @@ public class NewDroneAudio : MonoBehaviour
             break;
             */
             case "horn":
-                if (hornSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                print("sounding horn");
+                if (hornSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 hornSoundPlaying = true;
                 PlaySound_aux(m_HornSoundSource, false);
                 StartCoroutine(DisablePlayingFlag(hornSoundPlaying, m_HornSoundSource.clip.length));
                 break;
             case "startEngine":
-                if (startEngineSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                if (startEngineSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 startEngineSoundPlaying = true;
                 PlaySound_aux(m_StartEngineSource, false);
                 StartCoroutine(DisablePlayingFlag(startEngineSoundPlaying, m_StartEngineSource.clip.length));
                 break;
             case "waterCrash":
-                if (waterCrashSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                if (waterCrashSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 waterCrashSoundPlaying = true;
                 PlaySound_aux(m_WaterCrashSource, false); // mudar para true?
                 StartCoroutine(DisablePlayingFlag(startEngineSoundPlaying, m_WaterCrashSource.clip.length));
                 break;
             case "waterTouch":
-                if (waterTouchSoundPlaying == false) { print("SOUND ALREADY PLAYING"); break; }
+                if (waterTouchSoundPlaying == true) { print("SOUND ALREADY PLAYING"); break; }
                 waterTouchSoundPlaying = true;
                 PlaySound_aux(m_WaterTouchSource, false);
                 StartCoroutine(DisablePlayingFlag(startEngineSoundPlaying, m_WaterTouchSource.clip.length));

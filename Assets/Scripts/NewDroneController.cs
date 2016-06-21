@@ -125,6 +125,9 @@ public class NewDroneController : MonoBehaviour
                 UpDownTurn = -Input.GetAxis("RightVertical (ps3/360)");
             }
 
+            if (Input.GetKeyDown("joystick button 3"))
+                DroneSoundController.PlaySound_fixedLength("horn");
+
             //Pitch Value
             // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
             Pitch = UpDownTurn * rightAnalogSensitivity;
