@@ -2,19 +2,16 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class DroneController : MonoBehaviour
+public class NewDroneController : MonoBehaviour
 {
+    [Space(10)]
+    [Tooltip("Current number of laps completed by the drone.")]
+    public int currentNumberOfLaps = 0;
+    [Space(10)]
+    [Tooltip("Camera to follow the drone. This field is mandatory for proper functioning.")]
+    public Camera camera;
 
-    /*
-    public KeyCode UpKey;
-    public KeyCode DownKey;
-    public KeyCode FrontSpin;
-    public KeyCode BackWardSpin;
-    public KeyCode LeftTurn;
-    public KeyCode RightTurn;
-    public KeyCode LeftSpin;
-    public KeyCode RightSpin;
-    */
+
     public KeyCode EngineOnOffKey;
 
     public GameObject[] MainMotor; // Helicoptor Big Propeller. Use Y Rotate Value.
@@ -63,6 +60,8 @@ public class DroneController : MonoBehaviour
     bool isHovering;
     float stabilizationScale = 2.0f; // higher value stops the drone faster
 
+    public float forceScale = 0.5f;
+
     // debug
     public GameObject debugText1;
     public GameObject debugText2;
@@ -79,6 +78,11 @@ public class DroneController : MonoBehaviour
 
     void Awake()
     {
+        /*
+        for (int i = 0; i < MainMotor.Length; i++)
+            MainMotor[i].transform.Rotate(90.0f, 0f, 0f);
+        */
+
         // Time.timeScale = 0.5f;
 
         // hoverValue = 10.0f;
@@ -138,9 +142,20 @@ public class DroneController : MonoBehaviour
 
     void Update()
     {
+        Vector3 frontVector = new Vector3(camera.transform.forward.x, 0, camera.transform.forward.z);
+        Vector3 upVector = new Vector3(0, -camera.transform.forward.y, 0);
+
         // SoundControl(); // Check Helicoptor Engine Sound
         MotorRotateControl(); // Check Motor Rotate State
         EngineControl(); // Check Engine Turn On/Off
+
+        //make camera's tilt independent of drone
+        camera.transform.eulerAngles = new Vector3(17, this.gameObject.transform.eulerAngles.y, 0);
+        //make camera's position relative to drone
+        Vector3 offset = new Vector3(0f, 0.95f, -1.85f);
+        Vector3 correctedOffset = Quaternion.Euler(0, this.gameObject.transform.eulerAngles.y, 0) * offset;
+        camera.transform.position = this.gameObject.transform.position + correctedOffset;
+        // TODO Refactor disto
     }
 
     float KeyValue(KeyCode A, KeyCode B, float Value, float yValue, float _float, float SmoothTime)
@@ -212,7 +227,7 @@ public class DroneController : MonoBehaviour
                 Vector3 nonHoverForce = Vector3.up * verticalForceScale;
                 nonHoverForce.x = 0f;
                 nonHoverForce.z = 0f;
-                GetComponent<Rigidbody>().AddForce(nonHoverForce);
+                GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale);
 
                 CurrentEnginePowerVertical += Mathf.Abs(verticalForceScale);
             }
@@ -221,7 +236,7 @@ public class DroneController : MonoBehaviour
                 verticalForceScale = 0f;
                 GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
                 float hoverForce = 2.0f;
-                GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed);
+                GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed); // aplicar forceScale aqui?
 
                 CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed); // cuidado porque o verticalSpeed não tem limites rígidos
 
@@ -241,18 +256,18 @@ public class DroneController : MonoBehaviour
             Vector3 forwardForce = Vector3.forward * Pitch;
             Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
             transformedForwardForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedForwardForce);
+            GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale);
 
             CurrentEnginePowerHorizontal += Mathf.Abs(Pitch);
         }
-        else // estabiliza o drone, aplicando uma velocidade no sentido oposto
+        else // estabiliza o drone, aplicando uma força no sentido oposto
         {
             float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
 
             Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
             Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
             transformedBackwardForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedBackwardForce);
+            GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
 
             CurrentEnginePowerHorizontal += Mathf.Abs(localForwardSpeed * stabilizationScale);
         }
@@ -262,7 +277,7 @@ public class DroneController : MonoBehaviour
             Vector3 sideForce = Vector3.left * Roll;
             Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
             transformedSideForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedSideForce);
+            GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale);
 
             CurrentEnginePowerHorizontal += Mathf.Abs(Roll);
         }
@@ -273,7 +288,7 @@ public class DroneController : MonoBehaviour
             Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
             Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
             transformedSideForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedSideForce);
+            GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
 
             CurrentEnginePowerHorizontal += Mathf.Abs(localSidewaysSpeed * stabilizationScale);
         }
@@ -302,8 +317,8 @@ public class DroneController : MonoBehaviour
             print(MainMotor[0].GetComponent<BoxCollider>().center.ToString());
             */
 
-                for (int i = 0; i < MainMotor.Length; i++)
-                MainMotor[i].transform.Rotate(0, MainMotorRotation, 0);
+            for (int i = 0; i < MainMotor.Length; i++)
+                MainMotor[i].transform.Rotate(0, 0, MainMotorRotation);
         }
 
         /*
