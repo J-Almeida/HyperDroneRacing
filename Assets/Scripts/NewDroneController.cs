@@ -85,6 +85,13 @@ public class NewDroneController : MonoBehaviour
     bool UsingBoost = false;
     bool BoostOnCooldown = false;
 
+    float startingTime;    
+    float currentLapTime;
+    float bestLapTime = 100000f;
+    public Text CurrentLapTimeText;
+    public Text BestLapTimeText;
+    public Text LapsText;
+
 
     public enum ControlState
     {
@@ -134,7 +141,7 @@ public class NewDroneController : MonoBehaviour
                 GetComponent<Rigidbody>().AddRelativeForce(-Vector3.up * UpDownValue * UpDownVelocity);
             */
 
-            InvokeRepeating("updateDebugText", 0.0f, 0.5f);
+            // InvokeRepeating("updateDebugText", 0.0f, 0.5f);
 
             if (ControlType == ControlState.Gamepad)
             {
@@ -397,6 +404,8 @@ public class NewDroneController : MonoBehaviour
             else
             {
                 // DroneSoundController.PlaySound_fixedLength("startEngine");
+                startingTime = Time.realtimeSinceStartup;
+                InvokeRepeating("UpdateLapTime", 0, 0.1f);
                 engineIsOn = true;
             }
         }
@@ -492,6 +501,33 @@ public class NewDroneController : MonoBehaviour
             DroneSoundController.PlaySound_fixedLength("crash");
         }
         
+    }
+
+    public void IncreaseCurrentNumberOfLaps()
+    {
+        currentNumberOfLaps++;
+        LapsText.text = (currentNumberOfLaps + 1) + " / 3";
+
+        if (currentLapTime < bestLapTime)
+        {
+            bestLapTime = currentLapTime;
+
+            int bestLapMinutes = (int)(currentLapTime / 60.0f);
+            int bestLapSeconds = (int)(currentLapTime % 60f);
+            BestLapTimeText.text = bestLapMinutes + ":" + bestLapSeconds;
+        }
+        currentLapTime = 0f;
+
+        // if (currentNumberOfLaps == 3) termina
+    }
+
+    public void UpdateLapTime()
+    {
+        currentLapTime = Time.realtimeSinceStartup - startingTime;
+        int minutes = (int)(currentLapTime / 60.0f);
+        int seconds = (int)(currentLapTime % 60f);
+
+        CurrentLapTimeText.text = minutes + ":" + seconds;
     }
 
     /*
