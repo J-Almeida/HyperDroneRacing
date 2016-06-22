@@ -136,9 +136,10 @@ public class NewDroneAudio : MonoBehaviour
         Update();
 
         // Start the permanent sounds playing.
-        m_EngineSoundSource.PlayDelayed(5.0f);
+        // m_EngineSoundSource.PlayDelayed(5.0f);
+        m_EngineSoundSource.Play();
         // m_WindSoundSource.Play();
-        
+
         // boost sound
         m_BoostSoundSource = gameObject.AddComponent<AudioSource>();
         m_BoostSoundSource.clip = m_BoostSound;

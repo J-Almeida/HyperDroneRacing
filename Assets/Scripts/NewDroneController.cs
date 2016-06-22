@@ -379,7 +379,7 @@ public class NewDroneController : MonoBehaviour
                 engineIsOn = false;
             else
             {
-                DroneSoundController.PlaySound_fixedLength("startEngine");
+                // DroneSoundController.PlaySound_fixedLength("startEngine");
                 engineIsOn = true;
             }
         }
