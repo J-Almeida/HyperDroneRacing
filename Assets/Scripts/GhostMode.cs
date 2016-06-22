@@ -3,10 +3,12 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GhostMode : MonoBehaviour {
+
+    NewDroneAudio DroneSoundController;
     public Collider colliderToDisable;
     public float ghostDuration = 3f;
     public float ghostCooldown = 5f;
-    public AudioSource ghostAudio;
+    // public AudioSource ghostAudio;
     public Renderer[] renderers;
     public Shader ghostShader;
 
@@ -32,6 +34,7 @@ public class GhostMode : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        DroneSoundController = this.GetComponent<NewDroneAudio>();
         UsingGhost = false;
         ghostTimer = ghostDuration;
         originalColors = new Color[renderers.Length];
@@ -50,7 +53,8 @@ public class GhostMode : MonoBehaviour {
 
         colliderToDisable.isTrigger = true;
         UsingGhost = true;
-        ghostAudio.Play();
+        // ghostAudio.Play();
+        DroneSoundController.PlaySound("ghost");
         ghostCooldownTimer = ghostCooldown;
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -63,16 +67,16 @@ public class GhostMode : MonoBehaviour {
         ghostTimer = ghostDuration;
         colliderToDisable.isTrigger = false;
         UsingGhost = false;
-        ghostAudio.Stop();
+        // ghostAudio.Stop();
+        DroneSoundController.StopSound("ghost");
         for (int i = 0; i < renderers.Length; i++)
         {
             renderers[i].material.shader = originalShaders[i];
         }
         
     }
-
-	// Update is called once per frame
-	void Update () {
+    
+	void FixedUpdate () {
        if (Input.GetKey("joystick button 2") || UsingGhost)
         {
             UseGhost();
@@ -85,17 +89,11 @@ public class GhostMode : MonoBehaviour {
 
     }
 
-
-    /// <summary>
-    /// ///////
-    /// </summary>
-
-
     void UseGhost()
     {
         if (GhostOnCooldown) return;
 
-        enableGhost();
+        // enableGhost();
 
         UsingGhost = true;
         GhostStamina -= Time.fixedDeltaTime * 0.25f;
@@ -109,8 +107,6 @@ public class GhostMode : MonoBehaviour {
             GhostOnCooldown = true;
             GhostCoolDown();
             disableGhost();
-            // todo desativar boost em si
-            // TODO ativar cooldown do boost
         }
     }
 

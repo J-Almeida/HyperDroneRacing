@@ -309,6 +309,44 @@ public class NewDroneAudio : MonoBehaviour
         source.Play();
     }
 
+    public void PlaySound(string sound)
+    {
+        switch (sound)
+        {
+            case "boost":
+                m_BoostSoundSource.Play();
+                break;
+            case "ghost":
+                m_GhostSource.Play();
+                break;
+            case "glitch":
+                m_GlitchSoundSource.Play();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void StopSound(string sound)
+    {
+        switch (sound)
+        {
+            case "boost":
+                m_BoostSoundSource.Stop();
+                break;
+            case "ghost":
+                m_GhostSource.Stop();
+                break;
+            case "glitch":
+                m_GlitchSoundSource.Stop();
+                break;
+            default:
+                break;
+        }
+    }
+        
+
+
     IEnumerator DisablePlayingFlag(string flag, float delay)
     {
         yield return new WaitForSeconds(delay + 0.05f);
