@@ -461,6 +461,20 @@ public class NewDroneController : MonoBehaviour
         BoostMeter.fillAmount = BoostStamina;
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        print(GetComponent<Rigidbody>().velocity.magnitude);
+        if(GetComponent<Rigidbody>().velocity.magnitude > 50.0f)
+        {
+            DroneSoundController.PlaySound_fixedLength("crashExplosion");
+        }
+        else
+        {
+            DroneSoundController.PlaySound_fixedLength("crash");
+        }
+        
+    }
+
     /*
     void SoundControl()
     {
