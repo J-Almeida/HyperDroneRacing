@@ -242,13 +242,13 @@ public class NewDroneAudio : MonoBehaviour
             break;
             */
             case "horn":
-                print("trying to sound horn");
+                // print("trying to sound horn");
                 if (hornSoundPlaying == true) {
                     print("SOUND ALREADY PLAYING");
                 }
                 else
                 {
-                    print("sounding horn");
+                    // print("sounding horn");
                     PlaySound_aux(m_HornSoundSource, false);
                     hornSoundPlaying = true;
                     StartCoroutine(DisablePlayingFlag("horn", m_HornSoundSource.clip.length));
@@ -298,7 +298,7 @@ public class NewDroneAudio : MonoBehaviour
 
     public void PlaySound_aux(AudioSource source, bool disablesEngineSound) // TODO disable engine sound
     {
-        print("playing sound " + source.clip.name + " at " + System.DateTime.Now.ToLongTimeString());
+        // print("playing sound " + source.clip.name + " at " + System.DateTime.Now.ToLongTimeString());
         source.Play();
     }
 

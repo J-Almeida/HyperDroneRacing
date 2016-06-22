@@ -68,11 +68,17 @@ public class NewDroneController : MonoBehaviour
     public GameObject debugText3;
     public GameObject debugText4;
 
-    public NewDroneAudio DroneSoundController;
+    NewDroneAudio DroneSoundController;
 
     [SerializeField]
+    private Image BoostBar;
+    [SerializeField]
     private Image BoostMeter;
-    float currentBoost = 1.0f; // current boost value [0-1]
+    float BoostStamina = 1.0f; // current boost stamina [0-1]
+    float BoostValue = 1.5f;
+    bool UsingBoost = false;
+    bool BoostOnCooldown = false;
+
 
     public enum ControlState
     {
@@ -134,11 +140,11 @@ public class NewDroneController : MonoBehaviour
 
             if (Input.GetKey("joystick button 5"))
             {
-                print("using boost");
                 UseBoost();
             }
             else
             {
+                UsingBoost = false;
                 ChargeBoost();
             }
 
@@ -249,7 +255,10 @@ public class NewDroneController : MonoBehaviour
                 Vector3 nonHoverForce = Vector3.up * verticalForceScale;
                 nonHoverForce.x = 0f;
                 nonHoverForce.z = 0f;
-                GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale);
+                if (UsingBoost)
+                    GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale * BoostValue);
+                else
+                    GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale);
 
                 CurrentEnginePowerVertical += Mathf.Abs(verticalForceScale);
             }
@@ -278,7 +287,11 @@ public class NewDroneController : MonoBehaviour
             Vector3 forwardForce = Vector3.forward * Pitch;
             Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
             transformedForwardForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale);
+
+            if (UsingBoost)
+                GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale * BoostValue);
+            else
+                GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale);
 
             CurrentEnginePowerHorizontal += Mathf.Abs(Pitch);
         }
@@ -299,7 +312,10 @@ public class NewDroneController : MonoBehaviour
             Vector3 sideForce = Vector3.left * Roll;
             Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
             transformedSideForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale);
+            if (UsingBoost)
+                GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale * BoostValue);
+            else
+                GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale);
 
             CurrentEnginePowerHorizontal += Mathf.Abs(Roll);
         }
@@ -357,7 +373,7 @@ public class NewDroneController : MonoBehaviour
 
     void EngineControl()
     {
-        if (Input.GetKeyDown(EngineOnOffKey))
+        if (Input.GetKeyDown(EngineOnOffKey) || Input.GetKeyDown("joystick button 7"))
         {
             if (engineIsOn)
                 engineIsOn = false;
@@ -393,28 +409,57 @@ public class NewDroneController : MonoBehaviour
 
     void UseBoost()
     {
-        currentBoost -= Time.fixedDeltaTime;
-        BoostMeter.fillAmount = currentBoost;
+        if (BoostOnCooldown) return;
+
+        UsingBoost = true;
+        BoostStamina -= Time.fixedDeltaTime * 0.5f;
+        BoostMeter.fillAmount = BoostStamina;
 
         // if (currentBoost > 1.0f) currentBoost = 1.0f;
-        if (currentBoost < 0.0f)
+        if (BoostStamina < 0.0f)
         {
-            currentBoost = 0.0f;
+            BoostStamina = 0.0f;
+            UsingBoost = false;
+            BoostOnCooldown = true;
+            BoostCooldown();
+            // todo desativar boost em si
             // TODO ativar cooldown do boost
         }
     }
 
     void ChargeBoost()
     {
-        currentBoost += Time.fixedDeltaTime * 0.5f;
-        BoostMeter.fillAmount = currentBoost;
+        if (BoostOnCooldown) return;
 
-        if (currentBoost > 1.0f) currentBoost = 1.0f;
+        BoostStamina += Time.deltaTime * 0.2f;
+        BoostMeter.fillAmount = BoostStamina;
+
+        if (BoostStamina > 1.0f)
         {
-            currentBoost = 1.0f;
+            BoostStamina = 1.0f;
         }
     }
 
+    void BoostCooldown()
+    {
+        StartCoroutine("BoostBarBlink");
+    }
+
+    IEnumerator BoostBarBlink()
+    {
+        for (int i = 0; i < 10; i++)
+        { 
+            if (i % 2 == 0)
+                BoostBar.enabled = false;
+            else
+                BoostBar.enabled = true;
+            yield return new WaitForSeconds(0.5f);
+        }
+        BoostBar.enabled = true;
+        BoostOnCooldown = false;
+        // BoostStamina = 1.0f;
+        BoostMeter.fillAmount = BoostStamina;
+    }
 
     /*
     void SoundControl()
