@@ -1,9 +1,11 @@
 fileFormatVersion: 2
-guid: 02b9756f3ef01324f84b5033f94f5200
-timeCreated: 1466558281
+guid: d69d07ad545c58b488167eee6d85c272
+timeCreated: 1466593745
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: hdr_0
+    21300002: hdr_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,26 +32,86 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
-    wrapMode: -1
-  nPOTScale: 1
+    wrapMode: 1
+  nPOTScale: 0
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
-  alphaIsTransparency: 0
-  textureType: -1
+  alphaIsTransparency: 1
+  textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: hdr_0
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 305
+        width: 170
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -83, y: 21}
+        - {x: -85, y: 17}
+        - {x: -85, y: -21}
+        - {x: 85, y: -21}
+        - {x: 85, y: 21}
+    - name: hdr_1
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 28
+        width: 257
+        height: 197
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -128.5, y: -71.5}
+        - {x: -128.5, y: -83.5}
+        - {x: -8.5, y: -98.5}
+        - {x: 128.5, y: -98.5}
+        - {x: 128.5, y: -87.5}
+        - {x: 99.5, y: -71.5}
+      - - {x: -128.5, y: -28.5}
+        - {x: -128.5, y: -39.5}
+        - {x: 20.5, y: -57.5}
+        - {x: 128.5, y: -57.5}
+        - {x: 128.5, y: -45.5}
+        - {x: 107.5, y: -28.5}
+      - - {x: -128.5, y: 14.5}
+        - {x: -128.5, y: -1.5}
+        - {x: -2.5, y: -14.5}
+        - {x: 128.5, y: -14.5}
+        - {x: 128.5, y: -2.5}
+        - {x: 107.5, y: 14.5}
+      - - {x: 112.5, y: 50.5}
+        - {x: 99.5, y: 57.5}
+        - {x: -128.5, y: 57.5}
+        - {x: -128.5, y: 47.5}
+        - {x: -125.5, y: 42.5}
+        - {x: 124.5, y: 28.5}
+        - {x: 128.5, y: 28.5}
+        - {x: 128.5, y: 40.5}
+        - {x: 119.5, y: 46.5}
+      - - {x: -128.5, y: 98.5}
+        - {x: -128.5, y: 89.5}
+        - {x: 117.5, y: 71.5}
+        - {x: 128.5, y: 71.5}
+        - {x: 128.5, y: 84.5}
+        - {x: 103.5, y: 98.5}
     outline: []
   spritePackingTag: 
   userData: 
