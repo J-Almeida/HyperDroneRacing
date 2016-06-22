@@ -477,7 +477,7 @@ public class NewDroneController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        print(GetComponent<Rigidbody>().velocity.magnitude);
+        // print(GetComponent<Rigidbody>().velocity.magnitude);
         if(GetComponent<Rigidbody>().velocity.magnitude > 50.0f)
         {
             DroneSoundController.PlaySound_fixedLength("crashExplosion");

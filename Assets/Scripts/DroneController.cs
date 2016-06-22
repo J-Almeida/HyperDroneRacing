@@ -84,7 +84,7 @@ public class DroneController : MonoBehaviour
         // hoverValue = 10.0f;
         hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
         // print("hovering set to " + hoverValue);
-        print("mass = " + GetComponent<Rigidbody>().mass);
+        // print("mass = " + GetComponent<Rigidbody>().mass);
 
         MaxEnginePowerVertical = hoverValue + VerticalForceMultiplier; // valor base + máximo para verticalForce Scale
         MaxEnginePowerHorizontal = maximumPitchDeg + maximumRollDeg;
