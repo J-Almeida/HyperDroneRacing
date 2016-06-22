@@ -316,7 +316,7 @@ public class NewDroneController : MonoBehaviour
             transformedBackwardForce.y = 0f;
             GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
 
-            CurrentEnginePowerHorizontal += Mathf.Abs(localForwardSpeed * stabilizationScale);
+            // CurrentEnginePowerHorizontal += Mathf.Abs(localForwardSpeed * stabilizationScale);
         }
 
         if (LeftRightSpin != 0) // se está a ser utilizado o analógico correspondente
@@ -340,7 +340,7 @@ public class NewDroneController : MonoBehaviour
             transformedSideForce.y = 0f;
             GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
 
-            CurrentEnginePowerHorizontal += Mathf.Abs(localSidewaysSpeed * stabilizationScale);
+            // CurrentEnginePowerHorizontal += Mathf.Abs(localSidewaysSpeed * stabilizationScale);
         }
     }
 
