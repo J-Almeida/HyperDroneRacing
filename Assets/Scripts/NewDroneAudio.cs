@@ -332,12 +332,15 @@ public class NewDroneAudio : MonoBehaviour
         switch (sound)
         {
             case "boost":
-                m_BoostSoundSource.Stop();
+                if (m_BoostSoundSource.isPlaying)
+                    m_BoostSoundSource.Stop();
                 break;
             case "ghost":
-                m_GhostSource.Stop();
+                if (m_GhostSource.isPlaying)
+                    m_GhostSource.Stop();
                 break;
             case "glitch":
+                if (m_GlitchSoundSource.isPlaying)
                 m_GlitchSoundSource.Stop();
                 break;
             default:

@@ -154,7 +154,13 @@ public class NewDroneController : MonoBehaviour
                 ChargeBoost();
             }
 
-            //Pitch Value
+            if (Input.GetKeyDown("joystick button 5"))
+                DroneSoundController.PlaySound("boost");
+
+            if (Input.GetKeyUp("joystick button 5"))
+                DroneSoundController.StopSound("boost");
+
+            // Pitch Value
             // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
             Pitch = UpDownTurn * rightAnalogSensitivity;
             Pitch = Mathf.Clamp(Pitch, -maximumPitchDeg, maximumPitchDeg);
@@ -428,8 +434,6 @@ public class NewDroneController : MonoBehaviour
             UsingBoost = false;
             BoostOnCooldown = true;
             BoostCooldown();
-            // todo desativar boost em si
-            // TODO ativar cooldown do boost
         }
     }
 
@@ -442,6 +446,7 @@ public class NewDroneController : MonoBehaviour
 
         if (BoostStamina > 1.0f)
         {
+            DroneSoundController.StopSound("boost");
             BoostStamina = 1.0f;
         }
     }

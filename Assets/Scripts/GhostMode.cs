@@ -79,6 +79,7 @@ public class GhostMode : MonoBehaviour {
 	void FixedUpdate () {
        if (Input.GetKey("joystick button 2") || UsingGhost)
         {
+            enableGhost();
             UseGhost();
         }
         else

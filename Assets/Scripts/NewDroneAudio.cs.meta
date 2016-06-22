@@ -1,10 +1,22 @@
 fileFormatVersion: 2
 guid: 73f52c7aad2c18b4a8cba51c03c5d866
-timeCreated: 1466521156
+timeCreated: 1466591550
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_EngineSound: {instanceID: 0}
+  - m_BoostSound: {fileID: 8300000, guid: 77c456da71df6414faa039ee0cf8ce9c, type: 3}
+  - m_CheckpointSound: {instanceID: 0}
+  - m_CrashSound: {fileID: 8300000, guid: 114a12e268b62084487f453b4b126e4f, type: 3}
+  - m_CrashExplosionSound: {fileID: 8300000, guid: 7618ab00cfe828742be426738dcaa9ce,
+      type: 3}
+  - m_GhostSound: {instanceID: 0}
+  - m_GlitchSound: {instanceID: 0}
+  - m_HornSound: {instanceID: 0}
+  - m_StartEngineSound: {instanceID: 0}
+  - m_WaterCrash: {instanceID: 0}
+  - m_WaterTouch: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
