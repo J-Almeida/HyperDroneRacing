@@ -71,7 +71,13 @@ public class NewDroneController : MonoBehaviour
     NewDroneAudio DroneSoundController;
 
     [SerializeField]
+    private Sprite BoostIcon_enabled;
+    [SerializeField]
+    private Sprite BoostIcon_disabled;
+    [SerializeField]
     private Image BoostBar;
+    [SerializeField]
+    private Image BoostIcon;
     [SerializeField]
     private Image BoostMeter;
     float BoostStamina = 1.0f; // current boost stamina [0-1]
@@ -447,6 +453,8 @@ public class NewDroneController : MonoBehaviour
 
     IEnumerator BoostBarBlink()
     {
+        BoostIcon.sprite = BoostIcon_disabled;
+
         for (int i = 0; i < 10; i++)
         { 
             if (i % 2 == 0)
@@ -459,6 +467,7 @@ public class NewDroneController : MonoBehaviour
         BoostOnCooldown = false;
         // BoostStamina = 1.0f;
         BoostMeter.fillAmount = BoostStamina;
+        BoostIcon.sprite = BoostIcon_enabled;
     }
 
     void OnCollisionEnter(Collision collision)
