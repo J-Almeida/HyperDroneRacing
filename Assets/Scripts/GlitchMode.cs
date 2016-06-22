@@ -38,6 +38,8 @@ public class GlitchMode : MonoBehaviour
     {
         if (UsingGlitch) return;
 
+        this.GetComponent<NewDroneController>().hoverValue *= 0.25f;
+
         GlitchStamina = 1.0f;
         glitchDuration = 3f;
         GlitchTimer = glitchDuration;
@@ -53,6 +55,7 @@ public class GlitchMode : MonoBehaviour
     {
         GlitchStamina = 0.0f;
         UsingGlitch = false;
+        this.GetComponent<NewDroneController>().ResetHoverValue();
         GlitchTimer = glitchDuration; // ?
         GlitchBar.enabled = false;
         GlitchMeter.enabled = false;
@@ -78,8 +81,8 @@ public class GlitchMode : MonoBehaviour
 
     void UseGlitch()
     {
-        // o glitch em si acontece aqui
-
+        // o glitch em si acontece aqui se for um efeito contínuo e não uma mudança como o hovervalue
+        // glitch()
 
         // enableGlitch();
 

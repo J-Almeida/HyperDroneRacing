@@ -56,7 +56,7 @@ public class NewDroneController : MonoBehaviour
     bool engineIsOn = false;
     float EngineValue = 0.0f;
 
-    float hoverValue;
+    public float hoverValue;
     bool isHovering;
     float stabilizationScale = 2.0f; // higher value stops the drone faster
 
@@ -93,6 +93,11 @@ public class NewDroneController : MonoBehaviour
     };
 
     public ControlState ControlType = new ControlState();
+
+    public void ResetHoverValue()
+    {
+        hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
+    }
 
     void Awake()
     {
