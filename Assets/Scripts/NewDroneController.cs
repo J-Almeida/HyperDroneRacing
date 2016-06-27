@@ -122,7 +122,6 @@ public class NewDroneController : MonoBehaviour
     public KeyCode LeftSpin;
     public KeyCode RightSpin;
     public KeyCode HornKey;
-    public KeyCode GlitchKey;
     public KeyCode BoostKey;
     public KeyCode GhostKey;
     public enum ControlState

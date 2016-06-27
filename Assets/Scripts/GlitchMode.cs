@@ -21,6 +21,13 @@ public class GlitchMode : MonoBehaviour
     private Image GlitchIcon;
     [SerializeField]
     private Image GlitchMeter;
+    
+    public KeyCode GlitchKey;
+
+    int GlitchType = 0; // TODO texto no ecrã!
+    // 0 - vertical stabilization malfunction
+    // 1 - motor malfunction
+    float GlitchAngle = 0f;
 
     // Use this for initialization
     void Start()
@@ -38,7 +45,14 @@ public class GlitchMode : MonoBehaviour
     {
         if (UsingGlitch) return;
 
-        this.GetComponent<NewDroneController>().hoverValue *= 0.25f;
+        GlitchType = 1;
+
+        // the actual glitch goes here if it's (just) a value set and not a continuous effect
+        if (GlitchType == 0)
+            this.GetComponent<NewDroneController>().hoverValue *= 0.25f;
+        else if (GlitchType == 1)
+            GlitchAngle = Random.Range(30f, 50.0f);
+        // the glitch ends here
 
         GlitchStamina = 1.0f;
         glitchDuration = 3f;
@@ -66,7 +80,7 @@ public class GlitchMode : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetKey("joystick button 4") || UsingGlitch)
+        if (Input.GetKey(GlitchKey) || Input.GetKey("joystick button 4") || UsingGlitch)
         {
             print("entering glitch");
             if (!UsingGlitch) enableGlitch();
@@ -81,10 +95,27 @@ public class GlitchMode : MonoBehaviour
 
     void UseGlitch()
     {
-        // o glitch em si acontece aqui se for um efeito contínuo e não uma mudança como o hovervalue
-        // glitch()
+        // actual glitch happens here if it's a continuous effect
+        if (GlitchType == 1)
+        {
+            print("rotationing");
+            Vector3 GlitchDirection = new Vector3(GlitchAngle, 0f, GlitchAngle);
+            // applies rotation
+            transform.Rotate(GlitchDirection * Time.fixedDeltaTime);
 
-        // enableGlitch();
+            // applies force in same direction
+            Vector3 transformedGlitchForce = this.transform.TransformVector(GlitchDirection);
+            transformedGlitchForce.y = 0f;
+            GetComponent<Rigidbody>().AddForce(transformedGlitchForce);
+            
+
+            /*
+            Vector3 newForce = new Vector3(GlitchAngle, 0f, GlitchAngle);
+            Vector3 transformedNewForce = this.transform.TransformVector(newForce);
+            transformedNewForce.y = 0f;
+            GetComponent<Rigidbody>().AddForce(transformedNewForce);
+            */
+        }
 
         UsingGlitch = true;
         GlitchStamina -= Time.fixedDeltaTime * 0.25f;
