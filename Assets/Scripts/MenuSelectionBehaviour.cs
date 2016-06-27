@@ -7,7 +7,7 @@ public class MenuSelectionBehaviour : MonoBehaviour {
     public int currentSelectionIndex = 0;
     public List<GameObject> options;
 
-    private bool started = false;
+    private bool started = true;
 
     //private AudioSource = new AudioSource();
 
@@ -30,7 +30,7 @@ public class MenuSelectionBehaviour : MonoBehaviour {
             if (started) {
                 switch (currentSelectionIndex) {
                     case 0:
-                        Application.LoadLevel(1);
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("RITAscene");
                         break;
                     case 1:
                         break;

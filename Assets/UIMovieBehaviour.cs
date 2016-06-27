@@ -6,7 +6,7 @@ public class UIMovieBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        MovieTexture mt = (MovieTexture)GetComponent<RawImage>().mainTexture;
+        MovieTexture mt = (MovieTexture) GetComponent<RawImage>().mainTexture;
         mt.loop = true;
         mt.Play();
 	}
