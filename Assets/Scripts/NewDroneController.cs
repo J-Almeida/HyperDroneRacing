@@ -93,6 +93,20 @@ public class NewDroneController : MonoBehaviour
     public Text LapsText;
 
 
+    // keyboard
+    public KeyCode UpKey;
+    public KeyCode DownKey;
+    public KeyCode FrontSpin;
+    public KeyCode BackWardSpin;
+    public KeyCode LeftTurn;
+    public KeyCode RightTurn;
+    public KeyCode LeftSpin;
+    public KeyCode RightSpin;
+    public KeyCode HornKey;
+    public KeyCode GlitchKey;
+    public KeyCode BoostKey;
+    public KeyCode GhostKey;
+
     public enum ControlState
     {
         Gamepad,
@@ -149,28 +163,56 @@ public class NewDroneController : MonoBehaviour
                 LeftRightTurn = Input.GetAxis("LeftHorizontal (ps3/360)");
                 LeftRightSpin = Input.GetAxis("RightHorizontal (ps3/360)");
                 UpDownTurn = -Input.GetAxis("RightVertical (ps3/360)");
-            }
 
-            if (Input.GetKeyDown("joystick button 3"))
-            { 
-                DroneSoundController.PlaySound_fixedLength("horn");
-            }
+                if (Input.GetKeyDown("joystick button 3"))
+                {
+                    DroneSoundController.PlaySound_fixedLength("horn");
+                }
 
-            if (Input.GetKey("joystick button 5"))
+                if (Input.GetKey("joystick button 5"))
+                {
+                    UseBoost();
+                }
+                else
+                {
+                    UsingBoost = false;
+                    ChargeBoost();
+                }
+
+                if (Input.GetKeyDown("joystick button 5"))
+                    DroneSoundController.PlaySound("boost");
+
+                if (Input.GetKeyUp("joystick button 5"))
+                    DroneSoundController.StopSound("boost");
+            }
+            else if (ControlType == ControlState.KeyBoard)
             {
-                UseBoost();
-            }
-            else
-            {
-                UsingBoost = false;
-                ChargeBoost();
-            }
+                UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
+                UpDownTurn = KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.1f);
+                LeftRightTurn = KeyValue(LeftTurn, RightTurn, LeftRightTurn, yLeftRightTurn, 1.5f, 0.1f);
+                LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1, 0.1f);
 
-            if (Input.GetKeyDown("joystick button 5"))
-                DroneSoundController.PlaySound("boost");
+                if (Input.GetKeyDown(HornKey))
+                {
+                    DroneSoundController.PlaySound_fixedLength("horn");
+                }
 
-            if (Input.GetKeyUp("joystick button 5"))
-                DroneSoundController.StopSound("boost");
+                if (Input.GetKey(BoostKey))
+                {
+                    UseBoost();
+                }
+                else
+                {
+                    UsingBoost = false;
+                    ChargeBoost();
+                }
+
+                if (Input.GetKeyDown(BoostKey))
+                    DroneSoundController.PlaySound("boost");
+
+                if (Input.GetKeyUp(BoostKey))
+                    DroneSoundController.StopSound("boost");
+            }
 
             // Pitch Value
             // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
