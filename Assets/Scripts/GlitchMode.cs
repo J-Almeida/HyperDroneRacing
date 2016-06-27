@@ -29,6 +29,8 @@ public class GlitchMode : MonoBehaviour
     // 1 - motor malfunction
     float GlitchAngle = 0f;
 
+    public Text GlitchText;
+
     // Use this for initialization
     void Start()
     {
@@ -45,7 +47,7 @@ public class GlitchMode : MonoBehaviour
     {
         if (UsingGlitch) return;
 
-        GlitchType = 1;
+        GlitchType = (int) Mathf.RoundToInt(Random.Range(0f, 1f));
 
         // the actual glitch goes here if it's (just) a value set and not a continuous effect
         if (GlitchType == 0)
@@ -62,11 +64,17 @@ public class GlitchMode : MonoBehaviour
         GlitchMeter.enabled = true;
         GlitchIcon.enabled = true;
         // glitchAudio.Play();
-        
-        if (GlitchType == 0)
+
+        GlitchText.enabled = true;
+        if (GlitchType == 0) {
+            GlitchText.text = "Vertical Stabilization Malfunction!";
             DroneSoundController.PlaySound("glitch");
+        }
         else if (GlitchType == 1)
+        {
+            GlitchText.text = "One motor is glitching!";
             DroneSoundController.PlaySound("glitch_2");
+        }
     }
 
     private void disableGlitch()
@@ -84,6 +92,8 @@ public class GlitchMode : MonoBehaviour
             DroneSoundController.StopSound("glitch");
         else if (GlitchType == 1)
             DroneSoundController.StopSound("glitch_2");
+        GlitchText.text = "";
+        GlitchText.enabled = false;
     }
 
     void FixedUpdate()
@@ -106,26 +116,16 @@ public class GlitchMode : MonoBehaviour
         // actual glitch happens here if it's a continuous effect
         if (GlitchType == 1)
         {
-            print("rotationing");
-            Vector3 glitchDirection = new Vector3(GlitchAngle, 0f, GlitchAngle);
-            print("glitchDirection: " + glitchDirection.ToString());
+            Vector3 rotationVector = new Vector3(GlitchAngle, 0f, GlitchAngle);
             // applies rotation
-            transform.Rotate(glitchDirection * Time.fixedDeltaTime);
-
-            // applies force in same direction
-            Vector3 transformedGlitchForce = this.transform.TransformVector(glitchDirection);
-            print("transformedGlitchForce (y): " + transformedGlitchForce.ToString());
-            transformedGlitchForce.y = 0f;
-            print("transformedGlitchForce (no y): " + glitchDirection.ToString());
-            GetComponent<Rigidbody>().AddForce(transformedGlitchForce);
-            
-
-            /*
-            Vector3 newForce = new Vector3(GlitchAngle, 0f, GlitchAngle);
-            Vector3 transformedNewForce = this.transform.TransformVector(newForce);
-            transformedNewForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedNewForce);
-            */
+            transform.Rotate(rotationVector * Time.fixedDeltaTime);
+            Vector3 currentDirection = this.transform.TransformDirection(this.transform.localPosition); // igual a position normal?
+            // finds a direction for the applied force through the cross product of the drone's local position in global coordinates and the applied rotation
+            // 20 is a possible magnitude for an average horizontal force applied to the drone
+            Vector3 cross = Vector3.Cross(currentDirection, rotationVector).normalized * 20f;
+            // negates vertical component of resulting force
+            cross.y = 0f;
+            GetComponent<Rigidbody>().AddForce(cross);
         }
 
         UsingGlitch = true;
