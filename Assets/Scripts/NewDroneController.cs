@@ -37,6 +37,21 @@ public class NewDroneController : MonoBehaviour
     float UpDown;
     float yUpDown;
 
+    // Base Drone Values
+    [Tooltip("[1-5]")]
+    int Handling = 5;
+    [Tooltip("[1-5]")]
+    int TopSpeed = 5;
+    [Tooltip("[1-5]")]
+    int Acceleration = 5;
+    [Tooltip("[1-5]")]
+    int Weight = 4;
+    float HandlingYawBoost = 1.0f;
+    float HandlingStabilizationBoost = 1.0f;
+    float TopSpeedBoost = 1.0f;
+    float AccelerationBoost = 1.0f;
+    float WeightBoost = 0.0f;
+
     // Flight Values
     float Pitch;
     float UpDownTurn;
@@ -55,9 +70,10 @@ public class NewDroneController : MonoBehaviour
     public float hoverValue;
     bool isHovering;
     float stabilizationScale = 2.0f; // higher value stops the drone faster
-    public float forceScale = 0.5f; // how fast the drone goes
+    public float forceScale = 0.55f; // how fast the drone goes
 
     // Controller settings
+    float yawAnalogSensitivity = 105.0f;
     float rightAnalogSensitivity = 60.0f;
     
     // debug
@@ -83,7 +99,7 @@ public class NewDroneController : MonoBehaviour
 
     // Boost powerup
     float BoostStamina = 1.0f; // current boost stamina [0-1]
-    float BoostValue = 1.5f;
+    float BoostValue = 1.5f; // should be > 1, otherwise makes drone slower
     bool UsingBoost = false;
     bool BoostOnCooldown = false;
 
@@ -123,10 +139,19 @@ public class NewDroneController : MonoBehaviour
 
     void Awake()
     {
+        WeightBoost = Weight / 10f; // min 0.1 max 0.5
+        GetComponent<Rigidbody>().mass = 0.7f + WeightBoost; // min 0.8 max 1.2
+
         DroneSoundController = this.GetComponent<NewDroneAudio>();
-        hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
-        // print("hovering set to " + hoverValue);
-        // print("mass = " + GetComponent<Rigidbody>().mass);
+        hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone
+
+        // setup boost values
+        HandlingYawBoost = Handling * 15.0f; // used for yaw speed
+        HandlingStabilizationBoost = 1f + Handling / 12f;
+        AccelerationBoost = (Acceleration - 1) * 0.075f; // min = 0; max = 0.3; 0.3 / 4 = 0.075
+        TopSpeedBoost = (float) TopSpeed; // min = 1; max = 5
+        maximumPitchDeg += TopSpeedBoost; // forward/backward top speed directly depends on how much the drone pitches
+        maximumRollDeg += TopSpeedBoost; // sideways top speed directly depends on how much the drone rolls
 
         // máximo vertical = hoverValue + max VerticalForceScale = hovervalue + max upDown * verticalForceMultiplier = hovervalue + verticalForceMultiplier
         MaxEnginePowerVertical = hoverValue + VerticalForceMultiplier; // valor base + máximo para verticalForce Scale
@@ -212,7 +237,7 @@ public class NewDroneController : MonoBehaviour
             Pitch = Mathf.Clamp(Pitch, -maximumPitchDeg, maximumPitchDeg);
 
             //Yaw Value
-            Yaw += LeftRightTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
+            Yaw += LeftRightTurn * Time.fixedDeltaTime * (yawAnalogSensitivity + HandlingYawBoost);
 
             //Roll Value
             // Roll += -LeftRightSpin * Time.fixedDeltaTime * rightAnalogSensitivity; 
@@ -266,7 +291,6 @@ public class NewDroneController : MonoBehaviour
     {
         CurrentEnginePowerVertical = hoverValue; // base value
         CurrentEnginePowerHorizontal = 0f;
-        print("before vertical speed control call");
         VerticalSpeedControl();
         HorizontalSpeedControl();
         CurrentEnginePowerTotal = CurrentEnginePowerHorizontal + CurrentEnginePowerVertical;
@@ -311,9 +335,9 @@ public class NewDroneController : MonoBehaviour
                 else { // hover if up/down keys are not pressed
                     isHovering = true;
                     verticalForceScale = 0f;
-                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue); // hover force
                     float hoverForce = 2.0f;
-                    GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed); // aplicar forceScale aqui?
+                    GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed * HandlingStabilizationBoost); // aplicar forceScale aqui? Usa-se só o handling atualmente
 
                     CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed); // cuidado porque o verticalSpeed não tem limites rígidos
 
@@ -323,7 +347,7 @@ public class NewDroneController : MonoBehaviour
             else if (ControlType == ControlState.KeyBoard)
             {
                 // if (Input.GetKey(DownKey) == true || Input.GetKey(UpKey) == true) // not hovering
-                if( Mathf.Abs(KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f)) > 0.012f )
+                if( Mathf.Abs(KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f)) > 0.012f ) // TODO verificar se o hovering fica bem desta forma
                 {
                     isHovering = false;
                     verticalForceScale = UpDown * VerticalForceMultiplier;
@@ -342,9 +366,9 @@ public class NewDroneController : MonoBehaviour
                 else { // hover if up/down keys are not pressed
                     isHovering = true;
                     verticalForceScale = 0f;
-                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue); // hover force
                     float hoverForce = 2.0f;
-                    GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed);
+                    GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed * HandlingStabilizationBoost);
 
                     CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed);
                 }
@@ -377,7 +401,7 @@ public class NewDroneController : MonoBehaviour
             {
                 float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
 
-                Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
+                Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale * HandlingStabilizationBoost;
                 Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
                 transformedBackwardForce.y = 0f;
                 GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
@@ -404,7 +428,7 @@ public class NewDroneController : MonoBehaviour
             {
                 // print("estabilização horizontal 1");
                 float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
-                Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
+                Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale * HandlingStabilizationBoost;
                 Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
                 transformedBackwardForce.y = 0f;
                 GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
@@ -430,7 +454,7 @@ public class NewDroneController : MonoBehaviour
             {
                 float localSidewaysSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).x;
 
-                Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
+                Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale * HandlingStabilizationBoost;
                 Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
                 transformedSideForce.y = 0f;
                 GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
@@ -459,7 +483,7 @@ public class NewDroneController : MonoBehaviour
                 // print("estabilização horizontal 2");
                 float localSidewaysSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).x;
 
-                Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
+                Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale * HandlingStabilizationBoost;
                 Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
                 transformedSideForce.y = 0f;
                 GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
