@@ -11,65 +11,65 @@ public class NewDroneController : MonoBehaviour
     [Tooltip("Camera to follow the drone. This field is mandatory for proper functioning.")]
     public Camera camera;
 
-
-    public KeyCode EngineOnOffKey;
-
     public GameObject[] MainMotor; // Helicoptor Big Propeller. Use Y Rotate Value.
                                    // public GameObject[] SubMotor; //Helicoptor Small Propeller. User X RotateValue.
                                    // public AudioSource _AudioSource; //Helicoptor Engine Sound.
 
     public float MainMotorRotateVelocity;
-    // public float SubMotorRotateVelocity;
 
     float verticalForceScale = 0.0f;
     float VerticalForceMultiplier = 15.0f;
     float MainMotorRotation = 0.0f;
-    // float SubMotorRotation = 0.0f;
 
+    [HideInInspector]
     public float MaxEnginePowerVertical;
+    [HideInInspector]
     public float MaxEnginePowerHorizontal;
+    [HideInInspector]
     public float MaxEnginePowerTotal;
+    [HideInInspector]
     public float CurrentEnginePowerVertical = 0f;
+    [HideInInspector]
     public float CurrentEnginePowerHorizontal = 0f;
+    [HideInInspector]
     public float CurrentEnginePowerTotal = 0f;
 
     float UpDown;
     float yUpDown;
 
-    //Rotate Value
+    // Flight Values
     float Pitch;
     float UpDownTurn;
     float yUpDownTrun;
-
     float Yaw;
     float LeftRightTurn;
     float yLeftRightTurn;
-
     float Roll;
     float LeftRightSpin;
     float yLeftRightSpin;
-
-    float rightAnalogSensitivity = 60.0f;
     float maximumPitchDeg = 35.0f;
     float maximumRollDeg = 35.0f;
-
     bool engineIsOn = false;
     float EngineValue = 0.0f;
-
+    [HideInInspector]
     public float hoverValue;
     bool isHovering;
     float stabilizationScale = 2.0f; // higher value stops the drone faster
+    public float forceScale = 0.5f; // how fast the drone goes
 
-    public float forceScale = 0.5f;
-
+    // Controller settings
+    float rightAnalogSensitivity = 60.0f;
+    
     // debug
     public GameObject debugText1;
     public GameObject debugText2;
     public GameObject debugText3;
     public GameObject debugText4;
 
+    // Sound
     NewDroneAudio DroneSoundController;
 
+    // UI
     [SerializeField]
     private Sprite BoostIcon_enabled;
     [SerializeField]
@@ -80,11 +80,14 @@ public class NewDroneController : MonoBehaviour
     private Image BoostIcon;
     [SerializeField]
     private Image BoostMeter;
+
+    // Boost powerup
     float BoostStamina = 1.0f; // current boost stamina [0-1]
     float BoostValue = 1.5f;
     bool UsingBoost = false;
     bool BoostOnCooldown = false;
 
+    // Lap Timing
     float startingTime;    
     float currentLapTime;
     float bestLapTime = 100000f;
@@ -92,8 +95,8 @@ public class NewDroneController : MonoBehaviour
     public Text BestLapTimeText;
     public Text LapsText;
 
-
     // keyboard
+    public KeyCode EngineOnOffKey;
     public KeyCode UpKey;
     public KeyCode DownKey;
     public KeyCode FrontSpin;
@@ -106,13 +109,11 @@ public class NewDroneController : MonoBehaviour
     public KeyCode GlitchKey;
     public KeyCode BoostKey;
     public KeyCode GhostKey;
-
     public enum ControlState
     {
         Gamepad,
         KeyBoard
     };
-
     public ControlState ControlType = new ControlState();
 
     public void ResetHoverValue()
@@ -123,26 +124,17 @@ public class NewDroneController : MonoBehaviour
     void Awake()
     {
         DroneSoundController = this.GetComponent<NewDroneAudio>();
-        /*
-        for (int i = 0; i < MainMotor.Length; i++)
-            MainMotor[i].transform.Rotate(90.0f, 0f, 0f);
-        */
-
-        // Time.timeScale = 0.5f;
-
-        // hoverValue = 10.0f;
         hoverValue = Mathf.Abs(GetComponent<Rigidbody>().mass * Physics.gravity.y); // equivale ao peso do drone, mas não contraria a inércia
         // print("hovering set to " + hoverValue);
         // print("mass = " + GetComponent<Rigidbody>().mass);
 
-        MaxEnginePowerVertical = hoverValue + VerticalForceMultiplier; // valor base + máximo para verticalForce Scale
-        MaxEnginePowerHorizontal = maximumPitchDeg + maximumRollDeg;
-        MaxEnginePowerTotal = MaxEnginePowerVertical + MaxEnginePowerHorizontal;
-        // print("MaxEnginePowerTotal: " + MaxEnginePowerTotal);
-
-        // maxEnginePower = máximo vertical + máximo horizontal
         // máximo vertical = hoverValue + max VerticalForceScale = hovervalue + max upDown * verticalForceMultiplier = hovervalue + verticalForceMultiplier
+        MaxEnginePowerVertical = hoverValue + VerticalForceMultiplier; // valor base + máximo para verticalForce Scale
         // máximo horizontal = máximo frente + máximo lado = max Pitch + max Roll = maximumPitchDeg + maximumRollDeg
+        MaxEnginePowerHorizontal = maximumPitchDeg + maximumRollDeg;
+        // maxEnginePower = máximo vertical + máximo horizontal
+        MaxEnginePowerTotal = MaxEnginePowerVertical + MaxEnginePowerHorizontal;
+        // print("MaxEnginePowerTotal: " + MaxEnginePowerTotal);        
     }
 
 
@@ -190,7 +182,7 @@ public class NewDroneController : MonoBehaviour
                 UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
                 UpDownTurn = KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.1f);
                 LeftRightTurn = KeyValue(LeftTurn, RightTurn, LeftRightTurn, yLeftRightTurn, 1.5f, 0.1f);
-                LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1, 0.1f);
+                LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1.5f, 0.1f);
 
                 if (Input.GetKeyDown(HornKey))
                 {
@@ -249,7 +241,6 @@ public class NewDroneController : MonoBehaviour
         Vector3 offset = new Vector3(0f, 0.95f, -1.85f);
         Vector3 correctedOffset = Quaternion.Euler(0, this.gameObject.transform.eulerAngles.y, 0) * offset;
         camera.transform.position = this.gameObject.transform.position + correctedOffset;
-        // TODO Refactor disto
     }
 
     float KeyValue(KeyCode A, KeyCode B, float Value, float yValue, float _float, float SmoothTime)
@@ -270,25 +261,12 @@ public class NewDroneController : MonoBehaviour
         Value = Mathf.Clamp(Value, -1, 1);
         return Value;
     }
-    /*
-    float StabilizeUp(float Value, float yValue, float _float, float SmoothTime)
-    {
-        if (Input.GetKey(A))
-            Value -= Time.deltaTime * _float;
-        else if (Input.GetKey(B))
-            Value += Time.deltaTime * _float;
-        else
-            Value = Mathf.SmoothDamp(Value, 0, ref yValue, SmoothTime);
-
-        Value = Mathf.Clamp(Value, -1, 1);
-        return Value;
-    }
-    */
 
     void MotorControl()
     {
         CurrentEnginePowerVertical = hoverValue; // base value
         CurrentEnginePowerHorizontal = 0f;
+        print("before vertical speed control call");
         VerticalSpeedControl();
         HorizontalSpeedControl();
         CurrentEnginePowerTotal = CurrentEnginePowerHorizontal + CurrentEnginePowerVertical;
@@ -297,7 +275,7 @@ public class NewDroneController : MonoBehaviour
         debugText3.GetComponent<Text>().text = "CEPhori = " + (CurrentEnginePowerHorizontal / MaxEnginePowerHorizontal) * 100 + " %";
         debugText4.GetComponent<Text>().text = "TEP = " + (CurrentEnginePowerVertical + CurrentEnginePowerHorizontal) / MaxEnginePowerTotal * 100 + " %";
 
-        // simplesmente somar as 2 percentagens divididas?
+        // simplesmente somar as 2 percentagens parciais divididas por 2 em vez disto?
     }
 
     void VerticalSpeedControl()
@@ -307,37 +285,69 @@ public class NewDroneController : MonoBehaviour
 
         if (engineIsOn)
         {
-            if (UpDown != 0.0f) // not hovering
+            if (ControlType == ControlState.Gamepad)
             {
-                isHovering = false;
-                verticalForceScale = UpDown * VerticalForceMultiplier;
-                GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
+                if (UpDown != 0.0f) // not hovering
+                {
+                    isHovering = false;
+                    verticalForceScale = UpDown * VerticalForceMultiplier;
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
 
-                /*
-                Vector3 nonHoverForce = Vector3.up * verticalForceMultiplier;
-                GetComponent<Rigidbody>().AddRelativeForce(nonHoverForce);
-                */ // comentado para evitar modificar velocidade horizontal na função VerticalSpeedControl
+                    /*
+                    Vector3 nonHoverForce = Vector3.up * verticalForceMultiplier;
+                    GetComponent<Rigidbody>().AddRelativeForce(nonHoverForce);
+                    */ // comentado para evitar modificar velocidade horizontal na função VerticalSpeedControl
 
-                Vector3 nonHoverForce = Vector3.up * verticalForceScale;
-                nonHoverForce.x = 0f;
-                nonHoverForce.z = 0f;
-                if (UsingBoost)
-                    GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale * BoostValue);
-                else
-                    GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale);
+                    Vector3 nonHoverForce = Vector3.up * verticalForceScale;
+                    nonHoverForce.x = 0f;
+                    nonHoverForce.z = 0f;
+                    if (UsingBoost)
+                        GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale * BoostValue);
+                    else
+                        GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale);
 
-                CurrentEnginePowerVertical += Mathf.Abs(verticalForceScale);
+                    CurrentEnginePowerVertical += Mathf.Abs(verticalForceScale);
+                }
+                else { // hover if up/down keys are not pressed
+                    isHovering = true;
+                    verticalForceScale = 0f;
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
+                    float hoverForce = 2.0f;
+                    GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed); // aplicar forceScale aqui?
+
+                    CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed); // cuidado porque o verticalSpeed não tem limites rígidos
+
+                    // verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime * 2.5f);
+                }
             }
-            else { // hover if up/down keys are not pressed
-                isHovering = true;
-                verticalForceScale = 0f;
-                GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
-                float hoverForce = 2.0f;
-                GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed); // aplicar forceScale aqui?
+            else if (ControlType == ControlState.KeyBoard)
+            {
+                // if (Input.GetKey(DownKey) == true || Input.GetKey(UpKey) == true) // not hovering
+                if( Mathf.Abs(KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f)) > 0.012f )
+                {
+                    isHovering = false;
+                    verticalForceScale = UpDown * VerticalForceMultiplier;
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
 
-                CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed); // cuidado porque o verticalSpeed não tem limites rígidos
+                    Vector3 nonHoverForce = Vector3.up * verticalForceScale;
+                    nonHoverForce.x = 0f;
+                    nonHoverForce.z = 0f;
+                    if (UsingBoost)
+                        GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale * BoostValue);
+                    else
+                        GetComponent<Rigidbody>().AddForce(nonHoverForce * forceScale);
 
-                // verticalForceMultiplier = Mathf.Lerp(verticalForceMultiplier, hoverValue, Time.deltaTime * 2.5f);
+                    CurrentEnginePowerVertical += Mathf.Abs(verticalForceScale);
+                }
+                else { // hover if up/down keys are not pressed
+                    isHovering = true;
+                    verticalForceScale = 0f;
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * hoverValue);
+                    float hoverForce = 2.0f;
+                    GetComponent<Rigidbody>().AddForce(-Vector3.up * hoverForce * verticalSpeed);
+
+                    CurrentEnginePowerVertical += Mathf.Abs(hoverForce * verticalSpeed);
+                }
             }
         }
         // limitVerticalForceScale();
@@ -346,56 +356,117 @@ public class NewDroneController : MonoBehaviour
     void HorizontalSpeedControl()
     // as forças aplicadas nesta função são relativas ao drone
     // logo quando o drone está inclinado para a frente, a força "para a frente" vai ter um componente para baixo
-    // isto é eliminado com a eliminação da componente y da força transformada
+    // isto é eliminado através da eliminação da componente y da força transformada
     {
-        if (UpDownTurn != 0) // se está a ser utilizado o analógico correspondente
+        if (ControlType == ControlState.Gamepad)
         {
-            Vector3 forwardForce = Vector3.forward * Pitch;
-            Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
-            transformedForwardForce.y = 0f;
+            if (UpDownTurn != 0) // se está a ser utilizado o analógico correspondente
+            {
+                Vector3 forwardForce = Vector3.forward * Pitch;
+                Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
+                transformedForwardForce.y = 0f;
 
-            if (UsingBoost)
-                GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale * BoostValue);
-            else
-                GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale);
+                if (UsingBoost)
+                    GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale * BoostValue);
+                else
+                    GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale);
 
-            CurrentEnginePowerHorizontal += Mathf.Abs(Pitch);
+                CurrentEnginePowerHorizontal += Mathf.Abs(Pitch);
+            }
+            else // estabiliza o drone, aplicando uma força no sentido oposto
+            {
+                float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
+
+                Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
+                Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
+                transformedBackwardForce.y = 0f;
+                GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
+
+                // CurrentEnginePowerHorizontal += Mathf.Abs(localForwardSpeed * stabilizationScale);
+            }
         }
-        else // estabiliza o drone, aplicando uma força no sentido oposto
+        else if (ControlType == ControlState.KeyBoard)
         {
-            float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
-
-            Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
-            Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
-            transformedBackwardForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
-
-            // CurrentEnginePowerHorizontal += Mathf.Abs(localForwardSpeed * stabilizationScale);
+            // if (Input.GetKey(FrontSpin) == true || Input.GetKey(BackWardSpin) == true) // se está a ser utilizado o analógico correspondente
+            if (Mathf.Abs(KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.005f)) > 0.012f)
+            {
+                // print("não-estabilização horizontal 1");
+                Vector3 forwardForce = Vector3.forward * Pitch;
+                Vector3 transformedForwardForce = this.transform.TransformVector(forwardForce);
+                transformedForwardForce.y = 0f;
+                if (UsingBoost)
+                    GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale * BoostValue);
+                else
+                    GetComponent<Rigidbody>().AddForce(transformedForwardForce * forceScale);
+                CurrentEnginePowerHorizontal += Mathf.Abs(Pitch);
+            }
+            else // estabiliza o drone, aplicando uma força no sentido oposto
+            {
+                // print("estabilização horizontal 1");
+                float localForwardSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).z;
+                Vector3 backwardStabilizationForce = Vector3.back * localForwardSpeed * stabilizationScale;
+                Vector3 transformedBackwardForce = this.transform.TransformVector(backwardStabilizationForce);
+                transformedBackwardForce.y = 0f;
+                GetComponent<Rigidbody>().AddForce(transformedBackwardForce); // não leva forceScale
+                // CurrentEnginePowerHorizontal += Mathf.Abs(localForwardSpeed * stabilizationScale);
+            }
         }
 
-        if (LeftRightSpin != 0) // se está a ser utilizado o analógico correspondente
+        if (ControlType == ControlState.Gamepad)
         {
-            Vector3 sideForce = Vector3.left * Roll;
-            Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
-            transformedSideForce.y = 0f;
-            if (UsingBoost)
-                GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale * BoostValue);
-            else
-                GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale);
+            if (LeftRightSpin != 0) // se está a ser utilizado o analógico correspondente
+            {
+                Vector3 sideForce = Vector3.left * Roll;
+                Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
+                transformedSideForce.y = 0f;
+                if (UsingBoost)
+                    GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale * BoostValue);
+                else
+                    GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale);
 
-            CurrentEnginePowerHorizontal += Mathf.Abs(Roll);
+                CurrentEnginePowerHorizontal += Mathf.Abs(Roll);
+            }
+            else // estabiliza o drone, aplicando uma velocidade no sentido oposto
+            {
+                float localSidewaysSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).x;
+
+                Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
+                Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
+                transformedSideForce.y = 0f;
+                GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
+
+                // CurrentEnginePowerHorizontal += Mathf.Abs(localSidewaysSpeed * stabilizationScale);
+            }
         }
-        else // estabiliza o drone, aplicando uma velocidade no sentido oposto
+        else if (ControlType == ControlState.KeyBoard)
         {
-            float localSidewaysSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).x;
+            // if (Input.GetKey(LeftSpin) == true || Input.GetKey(RightSpin) == true) // se está a ser utilizado o analógico correspondente
+            if (Mathf.Abs(KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1.5f, 0.005f)) > 0.012f)
+            {
+                // print("não-estabilização horizontal 2");
+                Vector3 sideForce = Vector3.left * Roll;
+                Vector3 transformedSideForce = this.transform.TransformVector(sideForce);
+                transformedSideForce.y = 0f;
+                if (UsingBoost)
+                    GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale * BoostValue);
+                else
+                    GetComponent<Rigidbody>().AddForce(transformedSideForce * forceScale);
 
-            Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
-            Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
-            transformedSideForce.y = 0f;
-            GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
+                CurrentEnginePowerHorizontal += Mathf.Abs(Roll);
+            }
+            else // estabiliza o drone, aplicando uma velocidade no sentido oposto
+            {
+                // print("estabilização horizontal 2");
+                float localSidewaysSpeed = transform.InverseTransformDirection(this.GetComponent<Rigidbody>().velocity).x;
 
-            // CurrentEnginePowerHorizontal += Mathf.Abs(localSidewaysSpeed * stabilizationScale);
-        }
+                Vector3 sideStabilizationForce = Vector3.left * localSidewaysSpeed * stabilizationScale;
+                Vector3 transformedSideForce = this.transform.TransformVector(sideStabilizationForce);
+                transformedSideForce.y = 0f;
+                GetComponent<Rigidbody>().AddForce(transformedSideForce); // não leva forcescale
+
+                // CurrentEnginePowerHorizontal += Mathf.Abs(localSidewaysSpeed * stabilizationScale);
+            }
+        }        
     }
 
     /*
@@ -412,29 +483,11 @@ public class NewDroneController : MonoBehaviour
     {
         if (MainMotor.Length > 0)
         {
-            /*
-            print("wing 0 position: ");
-            print(MainMotor[0].transform.position.ToString());
-            print("wing 0 local position: ");
-            print(MainMotor[0].transform.localPosition.ToString());
-            print("wing 0 box collider center position: ");
-            print(MainMotor[0].GetComponent<BoxCollider>().center.ToString());
-            */
-
             for (int i = 0; i < MainMotor.Length; i++)
                 MainMotor[i].transform.Rotate(0, 0, MainMotorRotation);
         }
 
-        /*
-        if (SubMotor.Length > 0)
-        {
-            for (int i = 0; i < SubMotor.Length; i++)
-                SubMotor[i].transform.Rotate(0, 0, SubMotorRotation);
-        }
-        */
-
         MainMotorRotation = MainMotorRotateVelocity * EngineValue * Time.deltaTime;
-        // SubMotorRotation = SubMotorRotateVelocity * EngineValue * Time.deltaTime;
     }
 
     void EngineControl()
