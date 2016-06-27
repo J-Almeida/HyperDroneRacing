@@ -81,6 +81,11 @@ public class NewDroneAudio : MonoBehaviour
     public AudioClip m_GlitchSound;
     AudioSource m_GlitchSoundSource;
 
+    // glitch sound
+    bool glitch2SoundPlaying = false;
+    public AudioClip m_Glitch2Sound;
+    AudioSource m_Glitch2SoundSource;
+
     // horn
     bool hornSoundPlaying = false;
     public AudioClip m_HornSound;
@@ -169,6 +174,11 @@ public class NewDroneAudio : MonoBehaviour
         m_GlitchSoundSource = gameObject.AddComponent<AudioSource>();
         m_GlitchSoundSource.clip = m_GlitchSound;
         m_GlitchSoundSource.playOnAwake = false;
+
+        // glitch 2 sound
+        m_Glitch2SoundSource = gameObject.AddComponent<AudioSource>();
+        m_Glitch2SoundSource.clip = m_Glitch2Sound;
+        m_Glitch2SoundSource.playOnAwake = false;
 
         // horn sound
         m_HornSoundSource = gameObject.AddComponent<AudioSource>();
@@ -322,6 +332,10 @@ public class NewDroneAudio : MonoBehaviour
             case "glitch":
                 m_GlitchSoundSource.Play();
                 break;
+            case "glitch_2":
+                m_EngineSoundSource.volume = 0.2f;
+                m_Glitch2SoundSource.Play();
+                break;
             default:
                 break;
         }
@@ -341,7 +355,13 @@ public class NewDroneAudio : MonoBehaviour
                 break;
             case "glitch":
                 if (m_GlitchSoundSource.isPlaying)
-                m_GlitchSoundSource.Stop();
+                    m_GlitchSoundSource.Stop();
+                break;
+            case "glitch_2":
+                if (m_Glitch2SoundSource.isPlaying) {
+                    m_Glitch2SoundSource.Stop();
+                    m_EngineSoundSource.volume = 1f;
+                }
                 break;
             default:
                 break;

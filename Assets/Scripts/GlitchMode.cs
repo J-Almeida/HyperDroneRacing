@@ -62,7 +62,11 @@ public class GlitchMode : MonoBehaviour
         GlitchMeter.enabled = true;
         GlitchIcon.enabled = true;
         // glitchAudio.Play();
-        DroneSoundController.PlaySound("glitch");
+        
+        if (GlitchType == 0)
+            DroneSoundController.PlaySound("glitch");
+        else if (GlitchType == 1)
+            DroneSoundController.PlaySound("glitch_2");
     }
 
     private void disableGlitch()
@@ -75,7 +79,11 @@ public class GlitchMode : MonoBehaviour
         GlitchMeter.enabled = false;
         GlitchIcon.enabled = false;
         // glitchAudio.Stop();
-        DroneSoundController.StopSound("glitch");
+
+        if (GlitchType == 0)
+            DroneSoundController.StopSound("glitch");
+        else if (GlitchType == 1)
+            DroneSoundController.StopSound("glitch_2");
     }
 
     void FixedUpdate()
@@ -99,13 +107,16 @@ public class GlitchMode : MonoBehaviour
         if (GlitchType == 1)
         {
             print("rotationing");
-            Vector3 GlitchDirection = new Vector3(GlitchAngle, 0f, GlitchAngle);
+            Vector3 glitchDirection = new Vector3(GlitchAngle, 0f, GlitchAngle);
+            print("glitchDirection: " + glitchDirection.ToString());
             // applies rotation
-            transform.Rotate(GlitchDirection * Time.fixedDeltaTime);
+            transform.Rotate(glitchDirection * Time.fixedDeltaTime);
 
             // applies force in same direction
-            Vector3 transformedGlitchForce = this.transform.TransformVector(GlitchDirection);
+            Vector3 transformedGlitchForce = this.transform.TransformVector(glitchDirection);
+            print("transformedGlitchForce (y): " + transformedGlitchForce.ToString());
             transformedGlitchForce.y = 0f;
+            print("transformedGlitchForce (no y): " + glitchDirection.ToString());
             GetComponent<Rigidbody>().AddForce(transformedGlitchForce);
             
 
