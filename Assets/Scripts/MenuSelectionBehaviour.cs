@@ -33,6 +33,7 @@ public class MenuSelectionBehaviour : MonoBehaviour {
                         UnityEngine.SceneManagement.SceneManager.LoadScene("RITAscene");
                         break;
                     case 1:
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("Multiplayer");
                         break;
                     case 2:
                         break;
