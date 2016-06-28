@@ -31,6 +31,13 @@ public class GlitchMode : MonoBehaviour
 
     public Text GlitchText;
 
+    public enum ControlState
+    {
+        Gamepad,
+        KeyBoard
+    };
+    public ControlState ControlType = new ControlState();
+
     // Use this for initialization
     void Start()
     {
@@ -98,17 +105,32 @@ public class GlitchMode : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetKey(GlitchKey) || Input.GetKey("joystick button 4") || UsingGlitch)
+        if (ControlType == ControlState.KeyBoard)
         {
-            print("entering glitch");
-            if (!UsingGlitch) enableGlitch();
-            UseGlitch();
+            if (Input.GetKey(GlitchKey) || Input.GetKey("joystick button 4") || UsingGlitch)
+            {
+                print("entering glitch");
+                if (!UsingGlitch) enableGlitch();
+                UseGlitch();
+            }
+            else
+            {
+                UsingGlitch = false;
+            }
         }
-        else
+        else if (ControlType == ControlState.Gamepad)
         {
-            UsingGlitch = false;
+            if (Input.GetKey("joystick button 4") || UsingGlitch)
+            {
+                print("entering glitch");
+                if (!UsingGlitch) enableGlitch();
+                UseGlitch();
+            }
+            else
+            {
+                UsingGlitch = false;
+            }
         }
-
     }
 
     void UseGlitch()

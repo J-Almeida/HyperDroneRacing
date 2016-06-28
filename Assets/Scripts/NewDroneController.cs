@@ -517,11 +517,14 @@ public class NewDroneController : MonoBehaviour
     {
         if (Input.GetKeyDown(EngineOnOffKey) || Input.GetKeyDown("joystick button 7"))
         {
-            if (engineIsOn)
+            if (engineIsOn) { 
                 engineIsOn = false;
+                DroneSoundController.StopSound("engine_sound");
+            }
             else
             {
                 // DroneSoundController.PlaySound_fixedLength("startEngine");
+                DroneSoundController.PlaySound("engine_sound");
                 startingTime = Time.realtimeSinceStartup;
                 InvokeRepeating("UpdateLapTime", 0, 0.1f);
                 engineIsOn = true;

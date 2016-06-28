@@ -336,6 +336,9 @@ public class NewDroneAudio : MonoBehaviour
                 m_EngineSoundSource.volume = 0.2f;
                 m_Glitch2SoundSource.Play();
                 break;
+            case "engine_sound":
+                m_EngineSoundSource.Play();
+                break;
             default:
                 break;
         }
@@ -358,8 +361,16 @@ public class NewDroneAudio : MonoBehaviour
                     m_GlitchSoundSource.Stop();
                 break;
             case "glitch_2":
-                if (m_Glitch2SoundSource.isPlaying) {
+                if (m_Glitch2SoundSource.isPlaying)
+                {
                     m_Glitch2SoundSource.Stop();
+                    m_EngineSoundSource.volume = 1f;
+                }
+                break;
+            case "engine_sound":
+                if (m_EngineSoundSource.isPlaying)
+                {
+                    m_EngineSoundSource.Stop();
                     m_EngineSoundSource.volume = 1f;
                 }
                 break;
