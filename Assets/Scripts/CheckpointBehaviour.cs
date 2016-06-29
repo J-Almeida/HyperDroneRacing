@@ -41,7 +41,7 @@ public class CheckpointBehaviour : MonoBehaviour {
                         other.GetComponent<NewDroneController>().IncreaseCurrentNumberOfLaps(); //new version
                         deleteDroneFromAllCheckPoints(drone);
 
-                        if (other.GetComponent<NewDroneController>().currentNumberOfLaps > 3)
+                        if (other.GetComponent<NewDroneController>().currentNumberOfLaps == 3)
                             other.GetComponent<NewDroneController>().Win();
                     }
                 }
