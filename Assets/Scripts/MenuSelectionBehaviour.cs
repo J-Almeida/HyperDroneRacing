@@ -30,7 +30,7 @@ public class MenuSelectionBehaviour : MonoBehaviour {
             if (started) {
                 switch (currentSelectionIndex) {
                     case 0:
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("RITAscene");
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("SinglePlayerKeyboard");
                         break;
                     case 1:
                         UnityEngine.SceneManagement.SceneManager.LoadScene("Multiplayer");
