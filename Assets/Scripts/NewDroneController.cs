@@ -268,11 +268,6 @@ public class NewDroneController : MonoBehaviour
                     DroneSoundController.StopSound("boost");
             }
 
-            /*
-            if (Input.GetKey(KeyCode.Return))
-                Lose();
-            */
-
             // Pitch Value
             // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
             Pitch = UpDownTurn * rightAnalogSensitivity;
