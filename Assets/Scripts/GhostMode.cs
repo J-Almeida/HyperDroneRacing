@@ -67,6 +67,7 @@ public class GhostMode : MonoBehaviour {
         ghostCooldownTimer = ghostCooldown;
         for (int i = 0; i < renderers.Length; i++)
         {
+            print("renderer " + renderers[i].name);
             renderers[i].material.shader = ghostShader;
         }
     }
@@ -103,7 +104,7 @@ public class GhostMode : MonoBehaviour {
         {
             if (Input.GetKey("joystick button 2") || UsingGhost)
             {
-                enableGhost();
+                if (!UsingGhost) enableGhost();
                 UseGhost();
             }
             else
