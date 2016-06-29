@@ -71,6 +71,7 @@ public class NewDroneController : MonoBehaviour
     bool isHovering;
     float stabilizationScale = 2.0f; // higher value stops the drone faster
     public float forceScale = 0.55f; // how fast the drone goes
+    bool DroneDisabled = false;
 
     // Controller settings
     float yawAnalogSensitivity = 105.0f;
@@ -96,6 +97,14 @@ public class NewDroneController : MonoBehaviour
     private Image BoostIcon;
     [SerializeField]
     private Image BoostMeter;
+    [SerializeField]
+    private Image EndBackground;
+    [SerializeField]
+    private Image EndMessage;
+    [SerializeField]
+    private Sprite WinMessage;
+    [SerializeField]
+    private Sprite LostMessage;
 
     // Boost powerup
     float BoostStamina = 1.0f; // current boost stamina [0-1]
@@ -123,7 +132,6 @@ public class NewDroneController : MonoBehaviour
     public KeyCode RightSpin;
     public KeyCode HornKey;
     public KeyCode BoostKey;
-    public KeyCode GhostKey;
     public enum ControlState
     {
         Gamepad,
@@ -192,6 +200,8 @@ public class NewDroneController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (DroneDisabled == true) return;
+
         if (engineIsOn)
         {
             /*
@@ -257,6 +267,11 @@ public class NewDroneController : MonoBehaviour
                 if (Input.GetKeyUp(BoostKey))
                     DroneSoundController.StopSound("boost");
             }
+
+            /*
+            if (Input.GetKey(KeyCode.Return))
+                Lose();
+            */
 
             // Pitch Value
             // Pitch += UpDownTurn * Time.fixedDeltaTime * rightAnalogSensitivity;
@@ -677,6 +692,36 @@ public class NewDroneController : MonoBehaviour
         int seconds = (int)(currentLapTime % 60f);
 
         CurrentLapTimeText.text = minutes + ":" + seconds;
+    }
+
+    public void Win()
+    {
+        EndBackground.enabled = true;
+        EndMessage.sprite = WinMessage;
+        EndMessage.enabled = true;
+        DroneDisabled = true;
+        
+        this.GetComponent<GlitchMode>().enabled = false;
+        this.GetComponent<GhostMode>().enabled = false;
+        this.GetComponent<NewDroneAudio>().enabled = false;
+        // this.GetComponent<Rigidbody>().useGravity = false;
+        this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ |
+                                    RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+    }
+
+    public void Lose()
+    {
+        EndBackground.enabled = true;
+        EndMessage.sprite = LostMessage;
+        EndMessage.enabled = true;
+        DroneDisabled = true;
+
+        this.GetComponent<GlitchMode>().enabled = false;
+        this.GetComponent<GhostMode>().enabled = false;
+        this.GetComponent<NewDroneAudio>().enabled = false;
+        // this.GetComponent<Rigidbody>().useGravity = false;
+        this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ |
+                                    RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
     }
 
     /*
