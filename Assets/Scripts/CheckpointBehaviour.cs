@@ -37,7 +37,8 @@ public class CheckpointBehaviour : MonoBehaviour {
                     this.transform.root.SendMessage("LapCheck");
 
                     if (getCurrentIndex() == this.transform.root.GetComponent<CourseBehaviour>().checkpoints.Count - 1) {
-                        other.GetComponent<DroneBehaviour>().currentNumberOfLaps++;
+                        //other.GetComponent<DroneBehaviour>().currentNumberOfLaps++; //old version
+                        other.GetComponent<NewDroneController>().IncreaseCurrentNumberOfLaps(); //new version
                         deleteDroneFromAllCheckPoints(drone);
                     }
                 }
