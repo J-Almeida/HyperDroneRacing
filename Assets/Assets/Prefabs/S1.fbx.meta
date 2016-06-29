@@ -1,0 +1,133 @@
+fileFormatVersion: 2
+guid: bd206eb79a69efc41bd53a4028ebc7bf
+timeCreated: 1467204659
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: h1BL
+    100002: h1BR
+    100004: h1FL
+    100006: h1FR
+    100008: h2BL
+    100010: h2BR
+    100012: h2FL
+    100014: h2FR
+    100016: heliceGUARD2
+    100018: helideGUARD1
+    100020: ironman
+    100022: rig1
+    100024: //RootNode
+    400000: h1BL
+    400002: h1BR
+    400004: h1FL
+    400006: h1FR
+    400008: h2BL
+    400010: h2BR
+    400012: h2FL
+    400014: h2FR
+    400016: heliceGUARD2
+    400018: helideGUARD1
+    400020: ironman
+    400022: rig1
+    400024: //RootNode
+    2300000: h1BL
+    2300002: h1BR
+    2300004: h1FL
+    2300006: h1FR
+    2300008: h2BL
+    2300010: h2BR
+    2300012: h2FL
+    2300014: h2FR
+    2300016: heliceGUARD2
+    2300018: helideGUARD1
+    2300020: ironman
+    2300022: rig1
+    3300000: h1BL
+    3300002: h1BR
+    3300004: h1FL
+    3300006: h1FR
+    3300008: h2BL
+    3300010: h2BR
+    3300012: h2FL
+    3300014: h2FR
+    3300016: heliceGUARD2
+    3300018: helideGUARD1
+    3300020: ironman
+    3300022: rig1
+    4300000: ironman
+    4300002: h1BL
+    4300004: h1FL
+    4300006: helideGUARD1
+    4300008: h1FR
+    4300010: h1BR
+    4300012: rig1
+    4300014: h2BL
+    4300016: h2BR
+    4300018: h2FL
+    4300020: h2FR
+    4300022: heliceGUARD2
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

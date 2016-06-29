@@ -24,7 +24,7 @@ public class GlitchMode : MonoBehaviour
     
     public KeyCode GlitchKey;
 
-    int GlitchType = 0; // TODO texto no ecrã!
+    int GlitchType = 0;
     // 0 - vertical stabilization malfunction
     // 1 - motor malfunction
     float GlitchAngle = 0f;
@@ -109,7 +109,7 @@ public class GlitchMode : MonoBehaviour
         {
             if (Input.GetKey(GlitchKey) || Input.GetKey("joystick button 4") || UsingGlitch)
             {
-                print("entering glitch");
+                // print("entering glitch");
                 if (!UsingGlitch) enableGlitch();
                 UseGlitch();
             }
@@ -122,7 +122,7 @@ public class GlitchMode : MonoBehaviour
         {
             if (Input.GetKey("joystick button 4") || UsingGlitch)
             {
-                print("entering glitch");
+                // print("entering glitch");
                 if (!UsingGlitch) enableGlitch();
                 UseGlitch();
             }

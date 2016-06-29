@@ -32,6 +32,15 @@ public class GhostMode : MonoBehaviour {
     [SerializeField]
     private Image GhostMeter;
 
+    public KeyCode GhostKey;
+
+    public enum ControlState
+    {
+        Gamepad,
+        KeyBoard
+    };
+    public ControlState ControlType = new ControlState();
+
     // Use this for initialization
     void Start() {
         DroneSoundController = this.GetComponent<NewDroneAudio>();
@@ -77,17 +86,32 @@ public class GhostMode : MonoBehaviour {
     }
     
 	void FixedUpdate () {
-       if (Input.GetKey("joystick button 2") || UsingGhost)
+        if (ControlType == ControlState.KeyBoard)
         {
-            enableGhost();
-            UseGhost();
+            if (Input.GetKey(GhostKey) || UsingGhost)
+            {
+                if (!UsingGhost) enableGhost();
+                UseGhost();
+            }
+            else
+            {
+                UsingGhost = false;
+                ChargeGhost();
+            }
         }
-        else
+        else if (ControlType == ControlState.Gamepad)
         {
-            UsingGhost= false;
-            ChargeGhost();
+            if (Input.GetKey("joystick button 2") || UsingGhost)
+            {
+                enableGhost();
+                UseGhost();
+            }
+            else
+            {
+                UsingGhost = false;
+                ChargeGhost();
+            }
         }
-
     }
 
     void UseGhost()
