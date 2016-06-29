@@ -241,9 +241,15 @@ public class NewDroneController : MonoBehaviour
             }
             else if (ControlType == ControlState.KeyBoard)
             {
+                /*
                 UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
                 UpDownTurn = KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.1f);
                 LeftRightTurn = KeyValue(LeftTurn, RightTurn, LeftRightTurn, yLeftRightTurn, 1.5f, 0.1f);
+                LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1.5f, 0.1f);
+                */
+                UpDown = KeyValue(DownKey, UpKey, UpDown, yUpDown, 1.5f, 0.005f);
+                UpDownTurn = KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.1f);
+                LeftRightTurn = KeyValue(LeftTurn, RightTurn, LeftRightTurn, yLeftRightTurn, 1.5f, 0.01f);
                 LeftRightSpin = KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1.5f, 0.1f);
 
                 if (Input.GetKeyDown(HornKey))
@@ -449,7 +455,8 @@ public class NewDroneController : MonoBehaviour
         else if (ControlType == ControlState.KeyBoard)
         {
             // if (Input.GetKey(FrontSpin) == true || Input.GetKey(BackWardSpin) == true) // se está a ser utilizado o analógico correspondente
-            if (Mathf.Abs(KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.005f)) > 0.012f)
+            // if (Mathf.Abs(KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 1.5f, 0.005f)) > 0.012f)
+            if (Mathf.Abs(KeyValue(BackWardSpin, FrontSpin, UpDownTurn, yUpDownTrun, 0.5f, 0.0005f)) > 0.012f)
             {
                 // print("não-estabilização horizontal 1");
                 Vector3 forwardForce = Vector3.forward * Pitch;
@@ -502,7 +509,8 @@ public class NewDroneController : MonoBehaviour
         else if (ControlType == ControlState.KeyBoard)
         {
             // if (Input.GetKey(LeftSpin) == true || Input.GetKey(RightSpin) == true) // se está a ser utilizado o analógico correspondente
-            if (Mathf.Abs(KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1.5f, 0.005f)) > 0.012f)
+            // if (Mathf.Abs(KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 1.5f, 0.005f)) > 0.012f)
+            if (Mathf.Abs(KeyValue(LeftSpin, RightSpin, LeftRightSpin, yLeftRightSpin, 0.5f, 0.0005f)) > 0.012f)
             {
                 // print("não-estabilização horizontal 2");
                 Vector3 sideForce = Vector3.left * Roll;
