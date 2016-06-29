@@ -26,8 +26,11 @@ public class DroneSelectController : MonoBehaviour {
     public Sprite[] DroneNameSprites;
     [Tooltip("Boost Ghost")]
     public Sprite[] BonusSkillSprites;
+    [Tooltip("Boost Ghost")]
+    public Sprite[] RatingImage;
 
     GameObject ActiveDrone;
+    public GameObject[] AvailableDrones;
 
     // Use this for initialization
     void Start() {
@@ -44,7 +47,8 @@ public class DroneSelectController : MonoBehaviour {
         SelectedObject = Selectables[selectedIndex];
         EnableArrows(ref SelectedObject);
 
-        ActiveDrone = GameObject.Find("Drone");
+        ActiveDrone = AvailableDrones[SelectedDroneBodyIndex];
+        UpdateDrone();
     }
 
     private void DisableArrows(ref GameObject selectedObject)
@@ -92,6 +96,7 @@ public class DroneSelectController : MonoBehaviour {
         SelectedDroneBodyIndex++;
         if (SelectedDroneBodyIndex >= DroneBodies.Length)
             SelectedDroneBodyIndex = 0;
+        UpdateDrone();
         DroneBodyDisplay.GetComponent<UnityEngine.UI.Image>().sprite = DroneNameSprites[SelectedDroneBodyIndex];
     }
 
@@ -100,6 +105,7 @@ public class DroneSelectController : MonoBehaviour {
         SelectedDroneBodyIndex--;
         if (SelectedDroneBodyIndex < 0)
             SelectedDroneBodyIndex = DroneBodies.Length - 1;
+        UpdateDrone();
         DroneBodyDisplay.GetComponent<UnityEngine.UI.Image>().sprite = DroneNameSprites[SelectedDroneBodyIndex];
     }
 
@@ -145,6 +151,37 @@ public class DroneSelectController : MonoBehaviour {
         }
     }
 
+    private void UpdateDrone()
+    {
+        string droneName = DroneNameSprites[SelectedDroneBodyIndex].name;
+        switch (droneName)
+        {
+            case "iron_man":
+                selectedIndex = 0;
+                TopSpeedDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[3]; // topSpeed = 4/5
+                HandlingDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[4]; // handling = 5/5
+                AccelerationDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[3]; // acceleration = 4/5
+                WeightDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[2]; // weight = 3/5
+                AvailableDrones[0].SetActive(true);
+                AvailableDrones[1].SetActive(false);
+                ActiveDrone = AvailableDrones[selectedIndex];
+                break;
+            case "green_goblin":
+                selectedIndex = 1;
+                TopSpeedDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[2]; // topSpeed = 3/5
+                HandlingDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[3]; // handling = 4/5
+                AccelerationDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[4]; // acceleration = 5/5
+                WeightDisplay.GetComponent<UnityEngine.UI.Image>().sprite = RatingImage[2]; // weight = 3/5
+                AvailableDrones[0].SetActive(false);
+                AvailableDrones[1].SetActive(true);
+                ActiveDrone = AvailableDrones[selectedIndex];
+                break;
+            default:
+                print("ERROR: invalid drone name - " + droneName);
+                break;
+        }
+    }
+
     // Update is called once per frame
     void Update () {
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -160,6 +197,6 @@ public class DroneSelectController : MonoBehaviour {
             // TODO o que faz o botão done
         */
 
-        ActiveDrone.transform.Rotate(new Vector3(0f, 10 * Time.fixedDeltaTime, 0f));
+        ActiveDrone.transform.Rotate(new Vector3(0f, 5 * Time.fixedDeltaTime, 0f));
     }
 }
