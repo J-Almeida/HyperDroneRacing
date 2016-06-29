@@ -138,6 +138,8 @@ public class NewDroneController : MonoBehaviour
 
     void Awake()
     {
+        SetBaseDroneValues();
+
         WeightBoost = Weight / 10f; // min 0.1 max 0.5
         GetComponent<Rigidbody>().mass = 0.7f + WeightBoost; // min 0.8 max 1.2
 
@@ -161,6 +163,32 @@ public class NewDroneController : MonoBehaviour
         // print("MaxEnginePowerTotal: " + MaxEnginePowerTotal);        
     }
 
+    void SetBaseDroneValues()
+    {
+        string name = this.name;
+        switch (name)
+        {
+            case "IronMan":
+                TopSpeed = 4;
+                Handling = 5;
+                Acceleration = 5;
+                Weight = 3;
+                break;
+            case "GreenGoblin":
+                TopSpeed = 3;
+                Handling = 4;
+                Acceleration = 5;
+                Weight = 3;
+                break;
+            default:
+                print("Drone name error; setting default base drone values");
+                TopSpeed = 3;
+                Handling = 5;
+                Acceleration = 5;
+                Weight = 3;
+                break;
+        }
+    }
 
     void FixedUpdate()
     {
