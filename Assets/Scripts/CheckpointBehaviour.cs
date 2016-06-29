@@ -40,6 +40,9 @@ public class CheckpointBehaviour : MonoBehaviour {
                         //other.GetComponent<DroneBehaviour>().currentNumberOfLaps++; //old version
                         other.GetComponent<NewDroneController>().IncreaseCurrentNumberOfLaps(); //new version
                         deleteDroneFromAllCheckPoints(drone);
+
+                        if (other.GetComponent<NewDroneController>().currentNumberOfLaps > 3)
+                            other.GetComponent<NewDroneController>().Win();
                     }
                 }
             }
