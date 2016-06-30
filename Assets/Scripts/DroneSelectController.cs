@@ -4,11 +4,14 @@ using System;
 
 public class DroneSelectController : MonoBehaviour {
 
+    string[] InputTypes = new string[2] { "Keyboard", "Gamepad" };
+    int SelectedInputTypeIndex = 0;
     string[] DroneBodies = new string[2] { "IronMan", "GreenGoblin" };
     int SelectedDroneBodyIndex = 0;
     string[] BonusSkills = new string[2]{ "Boost", "Ghost" };
     int SelectedBonusSkillIndex = 0;
 
+    GameObject InputDisplay;
     GameObject DroneBodyDisplay;
     GameObject BonusSkillDisplay;
     GameObject TopSpeedDisplay;
@@ -22,11 +25,13 @@ public class DroneSelectController : MonoBehaviour {
     GameObject[] Selectables;
     int selectedIndex = 0;
 
+    [Tooltip("Keyboard X360")]
+    public Sprite[] InputNameSprites;
     [Tooltip("IronMan GreenGoblin")]
     public Sprite[] DroneNameSprites;
     [Tooltip("Boost Ghost")]
     public Sprite[] BonusSkillSprites;
-    [Tooltip("Boost Ghost")]
+    [Tooltip("1 to 5")]
     public Sprite[] RatingImage;
 
     GameObject ActiveDrone;
@@ -34,6 +39,7 @@ public class DroneSelectController : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        InputDisplay = GameObject.Find("InputDisplay");
         DroneBodyDisplay = GameObject.Find("DroneBodyDisplay");
         BonusSkillDisplay = GameObject.Find("BonusSkillDisplay");
         TopSpeedDisplay = GameObject.Find("TopSpeedDisplay");
@@ -42,7 +48,7 @@ public class DroneSelectController : MonoBehaviour {
         WeightDisplay = GameObject.Find("WeightDisplay");
         DoneButton = GameObject.Find("DoneButton");
 
-        Selectables = new GameObject[3] { DroneBodyDisplay, BonusSkillDisplay, DoneButton};
+        Selectables = new GameObject[4] { InputDisplay, DroneBodyDisplay, BonusSkillDisplay, DoneButton};
 
         SelectedObject = Selectables[selectedIndex];
         EnableArrows(ref SelectedObject);
@@ -91,6 +97,22 @@ public class DroneSelectController : MonoBehaviour {
         EnableArrows(ref SelectedObject);
     }
 
+    private void NextInput()
+    {
+        SelectedInputTypeIndex++;
+        if (SelectedInputTypeIndex >= InputTypes.Length)
+            SelectedInputTypeIndex = 0;
+        InputDisplay.GetComponent<UnityEngine.UI.Image>().sprite = InputNameSprites[SelectedInputTypeIndex];
+    }
+
+    private void PreviousInput()
+    {
+        SelectedInputTypeIndex--;
+        if (SelectedInputTypeIndex < 0)
+            SelectedInputTypeIndex = InputTypes.Length - 1;
+        InputDisplay.GetComponent<UnityEngine.UI.Image>().sprite = InputNameSprites[SelectedInputTypeIndex];
+    }
+
     private void NextDroneBody()
     {
         SelectedDroneBodyIndex++;
@@ -129,6 +151,9 @@ public class DroneSelectController : MonoBehaviour {
     {
         switch (selected.name)
         {
+            case "InputDisplay":
+                NextInput();
+                break;
             case "DroneBodyDisplay":
                 NextDroneBody();
                 break;
@@ -142,6 +167,9 @@ public class DroneSelectController : MonoBehaviour {
     {
         switch (selected.name)
         {
+            case "InputDisplay":
+                PreviousInput();
+                break;
             case "DroneBodyDisplay":
                 PreviousDroneBody();
                 break;
@@ -182,6 +210,29 @@ public class DroneSelectController : MonoBehaviour {
         }
     }
 
+    void Done()
+    {
+        print("selected Drone = " + DroneBodies[SelectedDroneBodyIndex]);
+        print("selected input = " + InputTypes[SelectedInputTypeIndex]);
+        string selectedDrone = DroneBodies[SelectedDroneBodyIndex];
+        string selectedInput = InputTypes[SelectedInputTypeIndex];
+        if (selectedDrone == "IronMan")
+        {
+            if (selectedInput == "Gamepad")
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SinglePlayerGamepadIronMan");
+            else if (selectedInput == "Keyboard")
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SinglePlayerKeyboardIronMan");
+        }
+        else if (selectedDrone == "GreenGoblin")
+        {
+            if (selectedInput == "Gamepad")
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SinglePlayerGamepadGreenGoblin");
+            else if (selectedInput == "Keyboard")
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SinglePlayerKeyboardGreenGoblin");
+        }
+        else print("Error - invalid choices");
+    }
+
     // Update is called once per frame
     void Update () {
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -192,10 +243,10 @@ public class DroneSelectController : MonoBehaviour {
             NextItem(ref SelectedObject);
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
             PreviousItem(ref SelectedObject);
-        /*
-        else if (Input.GetKeyDown(KeyCode.Return) && (selectedIndex == Selectables.Length - 1) ) // activates the 'done' button (last item on Selectables array)
-            // TODO o que faz o botão done
-        */
+
+        else if (Input.GetKeyDown(KeyCode.Return) && (selectedIndex == Selectables.Length - 1)) // activates the 'done' button (last item on Selectables array)
+            Done();
+        
 
         ActiveDrone.transform.Rotate(new Vector3(0f, 5 * Time.fixedDeltaTime, 0f));
     }
