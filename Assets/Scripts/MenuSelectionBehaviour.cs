@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class MenuSelectionBehaviour : MonoBehaviour {
+public class MenuSelectionBehaviour : MonoBehaviour
+{
 
     public int currentSelectionIndex = 0;
     public List<GameObject> options;
@@ -11,26 +12,33 @@ public class MenuSelectionBehaviour : MonoBehaviour {
 
     //private AudioSource = new AudioSource();
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetKeyDown("joystick button 4") || Input.GetKeyDown("up")) {
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown("joystick button 4") || Input.GetKeyDown("up"))
+        {
             currentSelectionIndex--;
             GetComponents<AudioSource>()[1].Play();
         }
-        if (Input.GetKeyDown("joystick button 6") || Input.GetKeyDown("down")) {
+        if (Input.GetKeyDown("joystick button 6") || Input.GetKeyDown("down"))
+        {
             currentSelectionIndex++;
             GetComponents<AudioSource>()[1].Play();
         }
-        if (Input.GetKeyDown("joystick button 13") || Input.GetKeyDown(KeyCode.Return)) {
-            if (started) {
-                switch (currentSelectionIndex) {
+        if (Input.GetKeyDown("joystick button 13") || Input.GetKeyDown(KeyCode.Return))
+        {
+            if (started)
+            {
+                switch (currentSelectionIndex)
+                {
                     case 0:
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("SinglePlayerKeyboard");
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("StageSelect");
                         break;
                     case 1:
                         UnityEngine.SceneManagement.SceneManager.LoadScene("Multiplayer");
@@ -41,7 +49,8 @@ public class MenuSelectionBehaviour : MonoBehaviour {
                         Application.Quit();
                         break;
                 }
-            } else {
+            }
+            else {
                 started = true;
             }
 

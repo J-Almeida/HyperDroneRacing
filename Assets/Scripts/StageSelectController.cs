@@ -2,7 +2,8 @@
 using System.Collections;
 using System;
 
-public class StageSelectController : MonoBehaviour {
+public class StageSelectController : MonoBehaviour
+{
 
     string[] StageNames = new string[2] { "Map01", "Unavailable Map" };
     int SelectedStageIndex = 0;
@@ -17,13 +18,14 @@ public class StageSelectController : MonoBehaviour {
 
     [Tooltip("Map01 UnavailableMap")]
     public Sprite[] StageSprites;
-    
+
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         StageDisplay = GameObject.Find("StageDisplay");
         DoneButton = GameObject.Find("DoneButton");
 
-        Selectables = new GameObject[2] { StageDisplay, DoneButton};
+        Selectables = new GameObject[2] { StageDisplay, DoneButton };
 
         SelectedObject = Selectables[selectedIndex];
         EnableArrows(ref SelectedObject);
@@ -86,7 +88,7 @@ public class StageSelectController : MonoBehaviour {
             SelectedStageIndex = StageNames.Length - 1;
         StageDisplay.GetComponent<UnityEngine.UI.Image>().sprite = StageSprites[SelectedStageIndex];
     }
-    
+
     private void NextItem(ref GameObject selected)
     {
         switch (selected.name)
@@ -107,8 +109,17 @@ public class StageSelectController : MonoBehaviour {
         }
     }
 
+    void Done()
+    {
+        if (selectedIndex == 1)
+            UnityEngine.SceneManagement.SceneManager.LoadScene("DroneSelect");
+        else
+            print("Error. SelectedIndex = " + selectedIndex);
+    }
+
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         if (Input.GetKeyDown(KeyCode.UpArrow))
             DecreaseArrowIndex();
         else if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -117,9 +128,8 @@ public class StageSelectController : MonoBehaviour {
             NextItem(ref SelectedObject);
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
             PreviousItem(ref SelectedObject);
-        /*
-        else if (Input.GetKeyDown(KeyCode.Return) && (selectedIndex == Selectables.Length - 1) ) // activates the 'done' button (last item on Selectables array)
-            // TODO o que faz o botão done
-        */
+
+        else if (Input.GetKeyDown(KeyCode.Return))
+            Done();
     }
 }
