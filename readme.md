@@ -1,6 +1,6 @@
 # Hyper Drone Racing
 
-Hyper Drone Racing is a prototype for a 3rd person 3D racer with flying drones. Players must instead fly through the air while crossing checkpoints represented by floating hexagonal arches.
+Hyper Drone Racing is a prototype for a 3rd person 3D racer with flying drones. Players must fly through the air while crossing checkpoints represented by floating hexagonal arches.
 
 This game was developed as the final project of a Game Development class; the visual design, 3D models and assets were created by colleagues from the Design course; audio effects were developed by colleagues from the Multimedia course.
 
